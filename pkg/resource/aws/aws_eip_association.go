@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsEipAssociationResourceType = "aws_eip_association"
@@ -30,20 +28,4 @@ func (r *AwsEipAssociation) TerraformType() string {
 
 func (r *AwsEipAssociation) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsEipAssociationMetaData() {
-	dctlcty.SetMetadata(AwsEipAssociationResourceType, AwsEipAssociationTags, AwsEipAssociationNormalizer)
-}
-
-var AwsEipAssociationTags = map[string]string{
-	"allocation_id":        `computed:"true"`,
-	"id":                   `computed:"true"`,
-	"instance_id":          `computed:"true"`,
-	"network_interface_id": `computed:"true"`,
-	"private_ip_address":   `computed:"true"`,
-	"public_ip":            `computed:"true"`,
-}
-
-func AwsEipAssociationNormalizer(val *rescty.CtyAttributes) {
 }

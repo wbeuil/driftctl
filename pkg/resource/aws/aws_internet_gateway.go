@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsInternetGatewayResourceType = "aws_internet_gateway"
@@ -28,17 +26,4 @@ func (r *AwsInternetGateway) TerraformType() string {
 
 func (r *AwsInternetGateway) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsInternetGatewayMetaData() {
-	dctlcty.SetMetadata(AwsInternetGatewayResourceType, AwsInternetGatewayTags, AwsInternetGatewayNormalizer)
-}
-
-var AwsInternetGatewayTags = map[string]string{
-	"arn":      `computed:"true"`,
-	"id":       `computed:"true"`,
-	"owner_id": `computed:"true"`,
-}
-
-func AwsInternetGatewayNormalizer(val *rescty.CtyAttributes) {
 }

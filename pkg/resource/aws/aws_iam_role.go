@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamRoleResourceType = "aws_iam_role"
@@ -38,19 +38,13 @@ func (r *AwsIamRole) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamRoleMetaData() {
-	dctlcty.SetMetadata(AwsIamRoleResourceType, AwsIamRoleTags, AwsIamRoleNormalizer)
-}
-
-var AwsIamRoleTags = map[string]string{
-	"arn":                `computed:"true"`,
-	"assume_role_policy": `jsonstring:"true"`,
-	"create_date":        `computed:"true"`,
-	"id":                 `computed:"true"`,
-	"name":               `computed:"true"`,
-	"unique_id":          `computed:"true"`,
-}
-
-func AwsIamRoleNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"force_detach_policies"})
+func initAwsIamRoleMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.UpdateSchema(AwsIamRoleResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"assume_role_policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamRoleResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"force_detach_policies"})
+	})
 }

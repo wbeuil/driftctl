@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsEipResourceType = "aws_eip"
@@ -47,27 +47,8 @@ func (r *AwsEip) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsEipMetaData() {
-	dctlcty.SetMetadata(AwsEipResourceType, AwsEipTags, AwsEipNormalizer)
-}
-
-var AwsEipTags = map[string]string{
-	"allocation_id":        `computed:"true"`,
-	"association_id":       `computed:"true"`,
-	"customer_owned_ip":    `computed:"true"`,
-	"domain":               `computed:"true"`,
-	"id":                   `computed:"true"`,
-	"instance":             `computed:"true"`,
-	"network_border_group": `computed:"true"`,
-	"network_interface":    `computed:"true"`,
-	"private_dns":          `computed:"true"`,
-	"private_ip":           `computed:"true"`,
-	"public_dns":           `computed:"true"`,
-	"public_ip":            `computed:"true"`,
-	"public_ipv4_pool":     `computed:"true"`,
-	"vpc":                  `computed:"true"`,
-}
-
-func AwsEipNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsEipMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsEipResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

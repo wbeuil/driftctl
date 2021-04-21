@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsDefaultRouteTableResourceType = "aws_default_route_table"
@@ -41,18 +39,4 @@ func (r *AwsDefaultRouteTable) TerraformType() string {
 
 func (r *AwsDefaultRouteTable) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsDefaultRouteTableMetaData() {
-	dctlcty.SetMetadata(AwsDefaultRouteTableResourceType, AwsDefaultRouteTableTags, AwsDefaultRouteTableNormalizer)
-}
-
-var AwsDefaultRouteTableTags = map[string]string{
-	"id":       "computed:\"true\"",
-	"owner_id": "computed:\"true\"",
-	"route":    "computed:\"true\"",
-	"vpc_id":   "computed:\"true\"",
-}
-
-func AwsDefaultRouteTableNormalizer(val *rescty.CtyAttributes) {
 }

@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamUserResourceType = "aws_iam_user"
@@ -33,16 +33,8 @@ func (r *AwsIamUser) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamUserMetaData() {
-	dctlcty.SetMetadata(AwsIamUserResourceType, AwsIamUserTags, AwsIamUserNormalizer)
-}
-
-var AwsIamUserTags = map[string]string{
-	"arn":       `computed:"true"`,
-	"id":        `computed:"true"`,
-	"unique_id": `computed:"true"`,
-}
-
-func AwsIamUserNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"force_destroy"})
+func initAwsIamUserMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamUserResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"force_destroy"})
+	})
 }

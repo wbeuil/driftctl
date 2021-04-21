@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsKmsKeyResourceType = "aws_kms_key"
@@ -36,18 +36,8 @@ func (r *AwsKmsKey) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsKmsKeyMetaData() {
-	dctlcty.SetMetadata(AwsKmsKeyResourceType, AwsKmsKeyTags, AwsKmsKeyNormalizer)
-}
-
-var AwsKmsKeyTags = map[string]string{
-	"arn":         `computed:"true"`,
-	"description": `computed:"true"`,
-	"id":          `computed:"true"`,
-	"key_id":      `computed:"true"`,
-	"policy":      `jsonstring:"true" computed:"true"`,
-}
-
-func AwsKmsKeyNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"deletion_window_in_days"})
+func initAwsKmsKeyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsKmsKeyResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"deletion_window_in_days"})
+	})
 }

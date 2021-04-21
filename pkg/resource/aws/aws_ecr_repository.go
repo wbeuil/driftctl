@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsEcrRepositoryResourceType = "aws_ecr_repository"
@@ -42,18 +42,8 @@ func (r *AwsEcrRepository) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsEcrRepositoryMetaData() {
-	dctlcty.SetMetadata(AwsEcrRepositoryResourceType, AwsEcrRepositoryTags, AwsEcrRepositoryNormalizer)
-}
-
-var AwsEcrRepositoryTags = map[string]string{
-	"arn":                              `computed:"true"`,
-	"id":                               `computed:"true"`,
-	"registry_id":                      `computed:"true"`,
-	"repository_url":                   `computed:"true"`,
-	"encryption_configuration.kms_key": `computed:"true"`,
-}
-
-func AwsEcrRepositoryNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsEcrRepositoryMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsEcrRepositoryResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

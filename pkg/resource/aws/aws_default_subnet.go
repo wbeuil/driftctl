@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsDefaultSubnetResourceType = "aws_default_subnet"
@@ -42,23 +42,8 @@ func (r *AwsDefaultSubnet) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDefaultSubnetMetaData() {
-	dctlcty.SetMetadata(AwsDefaultSubnetResourceType, AwsDefaultSubnetTags, AwsDefaultSubnetNormalizer)
-}
-
-var AwsDefaultSubnetTags = map[string]string{
-	"arn":                             `computed:"true"`,
-	"assign_ipv6_address_on_creation": `computed:"true"`,
-	"availability_zone_id":            `computed:"true"`,
-	"cidr_block":                      `computed:"true"`,
-	"id":                              `computed:"true"`,
-	"ipv6_cidr_block":                 `computed:"true"`,
-	"ipv6_cidr_block_association_id":  `computed:"true"`,
-	"map_public_ip_on_launch":         `computed:"true"`,
-	"owner_id":                        `computed:"true"`,
-	"vpc_id":                          `computed:"true"`,
-}
-
-func AwsDefaultSubnetNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsDefaultSubnetMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDefaultSubnetResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

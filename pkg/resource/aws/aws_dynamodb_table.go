@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsDynamodbTableResourceType = "aws_dynamodb_table"
@@ -76,19 +76,8 @@ func (r *AwsDynamodbTable) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDynamodbTableMetaData() {
-	dctlcty.SetMetadata(AwsDynamodbTableResourceType, AwsDynamodbTableTags, AwsDynamodbTableNormalizer)
-}
-
-var AwsDynamodbTableTags = map[string]string{
-	"arn":                                `computed:"true"`,
-	"id":                                 `computed:"true"`,
-	"stream_arn":                         `computed:"true"`,
-	"stream_label":                       `computed:"true"`,
-	"stream_view_type":                   `computed:"true"`,
-	"server_side_encryption.kms_key_arn": `computed:"true"`,
-}
-
-func AwsDynamodbTableNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsDynamodbTableMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDynamodbTableResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

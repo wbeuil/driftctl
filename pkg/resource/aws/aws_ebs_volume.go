@@ -5,8 +5,6 @@ import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
 	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsEbsVolumeResourceType = "aws_ebs_volume"

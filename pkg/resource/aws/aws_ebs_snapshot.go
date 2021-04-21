@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsEbsSnapshotResourceType = "aws_ebs_snapshot"
@@ -40,21 +40,8 @@ func (r *AwsEbsSnapshot) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsEbsSnapshotMetaData() {
-	dctlcty.SetMetadata(AwsEbsSnapshotResourceType, AwsEbsSnapshotTags, AwsEbsSnapshotNormalizer)
-}
-
-var AwsEbsSnapshotTags = map[string]string{
-	"arn":                    `computed:"true"`,
-	"data_encryption_key_id": `computed:"true"`,
-	"encrypted":              `computed:"true"`,
-	"id":                     `computed:"true"`,
-	"kms_key_id":             `computed:"true"`,
-	"owner_alias":            `computed:"true"`,
-	"owner_id":               `computed:"true"`,
-	"volume_size":            `computed:"true"`,
-}
-
-func AwsEbsSnapshotNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsEbsSnapshotMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsEbsSnapshotResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamAccessKeyResourceType = "aws_iam_access_key"
@@ -31,20 +29,4 @@ func (r *AwsIamAccessKey) TerraformType() string {
 
 func (r *AwsIamAccessKey) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsIamAccessKeyMetaData() {
-	dctlcty.SetMetadata(AwsIamAccessKeyResourceType, AwsIamAccessKeyTags, AwsIamAccessKeyNormalizer)
-}
-
-var AwsIamAccessKeyTags = map[string]string{
-	"encrypted_secret":     `computed:"true"`,
-	"id":                   `computed:"true"`,
-	"key_fingerprint":      `computed:"true"`,
-	"secret":               `computed:"true"`,
-	"ses_smtp_password_v4": `computed:"true"`,
-	"status":               `computed:"true"`,
-}
-
-func AwsIamAccessKeyNormalizer(val *rescty.CtyAttributes) {
 }
