@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsSecurityGroupResourceType = "aws_security_group"
@@ -60,17 +60,9 @@ func (r *AwsSecurityGroup) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSecurityGroupMetaData() {
-	dctlcty.SetMetadata(AwsSecurityGroupResourceType, AwsSecurityGroupTags, AwsSecurityGroupNormalizer)
-}
-
-var AwsSecurityGroupTags = map[string]string{
-	"arn":      `computed:"true"`,
-	"owner_id": `computed:"true"`,
-	"vpc_id":   `computed:"true"`,
-}
-
-func AwsSecurityGroupNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"revoke_rules_on_delete"})
-	val.SafeDelete([]string{"timeouts"})
+func initAwsSecurityGroupMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsSecurityGroupResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"revoke_rules_on_delete"})
+		val.SafeDelete([]string{"timeouts"})
+	})
 }

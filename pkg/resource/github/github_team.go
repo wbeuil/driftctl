@@ -2,9 +2,9 @@
 package github
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const GithubTeamResourceType = "github_team"
@@ -36,12 +36,8 @@ func (r *GithubTeam) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initGithubTeamMetadata() {
-	dctlcty.SetMetadata(GithubTeamResourceType, GithubTeamTags, GithubTeamNormalizer)
-}
-
-var GithubTeamTags = map[string]string{}
-
-func GithubTeamNormalizer(val *dctlcty.CtyAttributes) {
-	val.SafeDelete([]string{"etag"})
+func initGithubTeamMetadata(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(GithubTeamResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"etag"})
+	})
 }

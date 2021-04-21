@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsSecurityGroupRuleResourceType = "aws_security_group_rule"
@@ -37,15 +37,8 @@ func (r *AwsSecurityGroupRule) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSecurityGroupRuleMetaData() {
-	dctlcty.SetMetadata(AwsSecurityGroupRuleResourceType, AwsSecurityGroupRuleTags, AwsSecurityGroupRuleNormalizer)
-}
-
-var AwsSecurityGroupRuleTags = map[string]string{
-	"id":                       `computed:"true"`,
-	"source_security_group_id": `computed:"true"`,
-}
-
-func AwsSecurityGroupRuleNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"self"})
+func initAwsSecurityGroupRuleMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsSecurityGroupRuleResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"self"})
+	})
 }

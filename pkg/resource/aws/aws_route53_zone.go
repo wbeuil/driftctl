@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRoute53ZoneResourceType = "aws_route53_zone"
@@ -37,17 +37,8 @@ func (r *AwsRoute53Zone) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRoute53ZoneMetaData() {
-	dctlcty.SetMetadata(AwsRoute53ZoneResourceType, AwsRoute53ZoneTags, AwsRoute53ZoneNormalizer)
-}
-
-var AwsRoute53ZoneTags = map[string]string{
-	"id":             `computed:"true"`,
-	"name_servers":   `computed:"true"`,
-	"zone_id":        `computed:"true"`,
-	"vpc.vpc_region": `computed:"true"`,
-}
-
-func AwsRoute53ZoneNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"force_destroy"})
+func initAwsRoute53ZoneMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53ZoneResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"force_destroy"})
+	})
 }

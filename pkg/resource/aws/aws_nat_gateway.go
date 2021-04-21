@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsNatGatewayResourceType = "aws_nat_gateway"
@@ -30,18 +28,4 @@ func (r *AwsNatGateway) TerraformType() string {
 
 func (r *AwsNatGateway) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsNatGatewayMetaData() {
-	dctlcty.SetMetadata(AwsNatGatewayResourceType, AwsNatGatewayTags, AwsNatGatewayNormalizer)
-}
-
-var AwsNatGatewayTags = map[string]string{
-	"id":                   `computed:"true"`,
-	"network_interface_id": `computed:"true"`,
-	"private_ip":           `computed:"true"`,
-	"public_ip":            `computed:"true"`,
-}
-
-func AwsNatGatewayNormalizer(val *rescty.CtyAttributes) {
 }

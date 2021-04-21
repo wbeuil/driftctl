@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRouteTableResourceType = "aws_route_table"
@@ -43,17 +43,8 @@ func (r *AwsRouteTable) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRouteTableMetaData() {
-	dctlcty.SetMetadata(AwsRouteTableResourceType, AwsRouteTableTags, AwsRouteTableNormalizer)
-}
-
-var AwsRouteTableTags = map[string]string{
-	"id":               `computed:"true"`,
-	"owner_id":         `computed:"true"`,
-	"propagating_vgws": `computed:"true"`,
-	"route":            `computed:"true"`,
-}
-
-func AwsRouteTableNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"route"})
+func initAwsRouteTableMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRouteTableResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"route"})
+	})
 }

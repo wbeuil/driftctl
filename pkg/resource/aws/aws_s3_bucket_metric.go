@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketMetricResourceType = "aws_s3_bucket_metric"
@@ -30,15 +28,4 @@ func (r *AwsS3BucketMetric) TerraformType() string {
 
 func (r *AwsS3BucketMetric) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsS3BucketMetricMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketMetricResourceType, AwsS3BucketMetricTags, AwsS3BucketMetricNormalizer)
-}
-
-var AwsS3BucketMetricTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsS3BucketMetricNormalizer(val *rescty.CtyAttributes) {
 }

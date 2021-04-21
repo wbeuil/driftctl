@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketAnalyticsConfigurationResourceType = "aws_s3_bucket_analytics_configuration"
@@ -43,15 +41,4 @@ func (r *AwsS3BucketAnalyticsConfiguration) TerraformType() string {
 
 func (r *AwsS3BucketAnalyticsConfiguration) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsS3BucketAnalyticsConfigurationMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketAnalyticsConfigurationResourceType, AwsS3BucketAnalyticsConfigurationTags, AwsS3BucketAnalyticsConfigurationNormalizer)
-}
-
-var AwsS3BucketAnalyticsConfigurationTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsS3BucketAnalyticsConfigurationNormalizer(val *rescty.CtyAttributes) {
 }

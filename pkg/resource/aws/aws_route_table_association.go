@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRouteTableAssociationResourceType = "aws_route_table_association"
@@ -27,15 +25,4 @@ func (r *AwsRouteTableAssociation) TerraformType() string {
 
 func (r *AwsRouteTableAssociation) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsRouteTableAssociationMetaData() {
-	dctlcty.SetMetadata(AwsRouteTableAssociationResourceType, AwsRouteTableAssociationTags, AwsRouteTableAssociationNormalizer)
-}
-
-var AwsRouteTableAssociationTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsRouteTableAssociationNormalizer(val *rescty.CtyAttributes) {
 }

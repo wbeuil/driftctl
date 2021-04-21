@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketInventoryResourceType = "aws_s3_bucket_inventory"
@@ -50,15 +48,4 @@ func (r *AwsS3BucketInventory) TerraformType() string {
 
 func (r *AwsS3BucketInventory) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsS3BucketInventoryMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketInventoryResourceType, AwsS3BucketInventoryTags, AwsS3BucketInventoryNormalizer)
-}
-
-var AwsS3BucketInventoryTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsS3BucketInventoryNormalizer(val *rescty.CtyAttributes) {
 }

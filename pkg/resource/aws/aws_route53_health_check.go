@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRoute53HealthCheckResourceType = "aws_route53_health_check"
@@ -44,16 +42,4 @@ func (r *AwsRoute53HealthCheck) TerraformType() string {
 
 func (r *AwsRoute53HealthCheck) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsRoute53HealthCheckMetaData() {
-	dctlcty.SetMetadata(AwsRoute53HealthCheckResourceType, AwsRoute53HealthCheckTags, AwsRoute53HealthCheckNormalizer)
-}
-
-var AwsRoute53HealthCheckTags = map[string]string{
-	"enable_sni": `computed:"true"`,
-	"id":         `computed:"true"`,
-}
-
-func AwsRoute53HealthCheckNormalizer(val *rescty.CtyAttributes) {
 }

@@ -2,9 +2,8 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsSnsTopicPolicyResourceType = "aws_sns_topic_policy"
@@ -28,14 +27,10 @@ func (r *AwsSnsTopicPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSnsTopicPolicyMetaData() {
-	dctlcty.SetMetadata(AwsSnsTopicPolicyResourceType, AwsSnsTopicPolicyTags, AwsSnsTopicPolicyNormalizer)
-}
-
-var AwsSnsTopicPolicyTags = map[string]string{
-	"id":     `computed:"true"`,
-	"policy": `jsonstring:"true"`,
-}
-
-func AwsSnsTopicPolicyNormalizer(val *rescty.CtyAttributes) {
+func initAwsSnsTopicPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.UpdateSchema(AwsSnsTopicPolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
 }

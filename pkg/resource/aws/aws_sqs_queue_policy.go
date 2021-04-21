@@ -2,9 +2,8 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsSqsQueuePolicyResourceType = "aws_sqs_queue_policy"
@@ -28,14 +27,10 @@ func (r *AwsSqsQueuePolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSqsQueuePolicyMetaData() {
-	dctlcty.SetMetadata(AwsSqsQueuePolicyResourceType, AwsSqsQueuePolicyTags, AwsSqsQueuePolicyNormalizer)
-}
-
-var AwsSqsQueuePolicyTags = map[string]string{
-	"id":     `computed:"true"`,
-	"policy": `jsonstring:"true"`,
-}
-
-func AwsSqsQueuePolicyNormalizer(val *rescty.CtyAttributes) {
+func initAwsSqsQueuePolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.UpdateSchema(AwsSqsQueuePolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
 }

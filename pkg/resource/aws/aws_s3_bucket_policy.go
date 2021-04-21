@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketPolicyResourceType = "aws_s3_bucket_policy"
@@ -28,16 +28,14 @@ func (r *AwsS3BucketPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketPolicyMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketPolicyResourceType, AwsS3BucketPolicyTags, AwsS3BucketPolicyNormalizer)
-}
-
-var AwsS3BucketPolicyTags = map[string]string{
-	"id":     `computed:"true"`,
-	"policy": `jsonstring:"true"`,
-}
-
-func AwsS3BucketPolicyNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"bucket"})
-	val.SafeDelete([]string{"id"})
+func initAwsS3BucketPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketPolicyResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"bucket"})
+		val.SafeDelete([]string{"id"})
+	})
+	resourceSchemaRepository.UpdateSchema(AwsS3BucketPolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
 }

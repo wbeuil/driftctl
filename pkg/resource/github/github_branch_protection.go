@@ -2,9 +2,9 @@
 package github
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const GithubBranchProtectionResourceType = "github_branch_protection"
@@ -43,14 +43,8 @@ func (r *GithubBranchProtection) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initGithubBranchProtectionMetadata() {
-	dctlcty.SetMetadata(GithubBranchProtectionResourceType, GithubBranchProtectionTags, GithubBranchProtectionNormalizer)
-}
-
-var GithubBranchProtectionTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func GithubBranchProtectionNormalizer(val *dctlcty.CtyAttributes) {
-	val.SafeDelete([]string{"repository_id"})
+func initGithubBranchProtectionMetadata(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(GithubBranchProtectionResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"repository_id"})
+	})
 }

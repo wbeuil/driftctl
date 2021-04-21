@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketNotificationResourceType = "aws_s3_bucket_notification"
@@ -48,18 +48,9 @@ func (r *AwsS3BucketNotification) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketNotificationMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketNotificationResourceType, AwsS3BucketNotificationTags, AwsS3BucketNotificationNormalizer)
-}
-
-var AwsS3BucketNotificationTags = map[string]string{
-	"id":                 `computed:"true"`,
-	"lambda_function.id": `computed:"true"`,
-	"queue.id":           `computed:"true"`,
-	"topic.id":           `computed:"true"`,
-}
-
-func AwsS3BucketNotificationNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"id"})
-	val.SafeDelete([]string{"bucket"})
+func initAwsS3BucketNotificationMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketNotificationResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"id"})
+		val.SafeDelete([]string{"bucket"})
+	})
 }

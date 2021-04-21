@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRoute53RecordResourceType = "aws_route53_record"
@@ -55,17 +55,9 @@ func (r *AwsRoute53Record) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRoute53RecordMetaData() {
-	dctlcty.SetMetadata(AwsRoute53RecordResourceType, AwsRoute53RecordTags, AwsRoute53RecordNormalizer)
-}
-
-var AwsRoute53RecordTags = map[string]string{
-	"allow_overwrite": `computed:"true"`,
-	"fqdn":            `computed:"true"`,
-	"id":              `computed:"true"`,
-}
-
-func AwsRoute53RecordNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"allow_overwrite"})
-	val.SafeDelete([]string{"name"})
+func initAwsRoute53RecordMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53RecordResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"allow_overwrite"})
+		val.SafeDelete([]string{"name"})
+	})
 }

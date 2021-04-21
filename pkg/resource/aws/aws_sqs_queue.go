@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsSqsQueueResourceType = "aws_sqs_queue"
@@ -39,19 +37,4 @@ func (r *AwsSqsQueue) TerraformType() string {
 
 func (r *AwsSqsQueue) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsSqsQueueMetaData() {
-	dctlcty.SetMetadata(AwsSqsQueueResourceType, AwsSqsQueueTags, AwsSqsQueueNormalizer)
-}
-
-var AwsSqsQueueTags = map[string]string{
-	"arn":                               `computed:"true"`,
-	"id":                                `computed:"true"`,
-	"kms_data_key_reuse_period_seconds": `computed:"true"`,
-	"name":                              `computed:"true"`,
-	"policy":                            `computed:"true"`,
-}
-
-func AwsSqsQueueNormalizer(val *rescty.CtyAttributes) {
 }

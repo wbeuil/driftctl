@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsS3BucketResourceType = "aws_s3_bucket"
@@ -137,27 +137,14 @@ func (r *AwsS3Bucket) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketMetaData() {
-	dctlcty.SetMetadata(AwsS3BucketResourceType, AwsS3BucketTags, AwsS3BucketNormalizer)
-}
-
-var AwsS3BucketTags = map[string]string{
-	"acceleration_status":         `computed:"true"`,
-	"arn":                         `computed:"true"`,
-	"bucket":                      `computed:"true"`,
-	"bucket_domain_name":          `computed:"true"`,
-	"bucket_regional_domain_name": `computed:"true"`,
-	"hosted_zone_id":              `computed:"true"`,
-	"id":                          `computed:"true"`,
-	"policy":                      `jsonstring:"true"`,
-	"region":                      `computed:"true"`,
-	"request_payer":               `computed:"true"`,
-	"website_domain":              `computed:"true"`,
-	"website_endpoint":            `computed:"true"`,
-	"lifecycle_rule.id":           `computed:"true"`,
-}
-
-func AwsS3BucketNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"acl"})
-	val.SafeDelete([]string{"force_destroy"})
+func initAwsS3BucketMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"acl"})
+		val.SafeDelete([]string{"force_destroy"})
+	})
+	resourceSchemaRepository.UpdateSchema(AwsS3BucketResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
 }

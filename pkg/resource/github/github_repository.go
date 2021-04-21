@@ -1,9 +1,9 @@
 package github
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const GithubRepositoryResourceType = "github_repository"
@@ -71,13 +71,9 @@ func (r *GithubRepository) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initGithubRepositoryMetadata() {
-	dctlcty.SetMetadata(GithubRepositoryResourceType, GithubRepositoryTags, GithubRepositoryNormalizer)
-}
-
-var GithubRepositoryTags = map[string]string{}
-
-func GithubRepositoryNormalizer(val *dctlcty.CtyAttributes) {
-	val.SafeDelete([]string{"etag"})
-	val.SafeDelete([]string{"auto_init"})
+func initGithubRepositoryMetadata(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(GithubRepositoryResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"etag"})
+		val.SafeDelete([]string{"auto_init"})
+	})
 }

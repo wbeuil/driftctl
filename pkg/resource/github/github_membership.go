@@ -2,9 +2,9 @@
 package github
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const GithubMembershipResourceType = "github_membership"
@@ -29,12 +29,8 @@ func (r *GithubMembership) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initGithubMembershipMetadata() {
-	dctlcty.SetMetadata(GithubMembershipResourceType, GithubMembershipTags, GithubMembershipNormalizer)
-}
-
-var GithubMembershipTags = map[string]string{}
-
-func GithubMembershipNormalizer(val *dctlcty.CtyAttributes) {
-	val.SafeDelete([]string{"etag"})
+func initGithubMembershipMetadata(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(GithubMembershipResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"etag"})
+	})
 }

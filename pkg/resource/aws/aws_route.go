@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsRouteResourceType = "aws_route"
@@ -46,24 +46,8 @@ func (r *AwsRoute) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRouteMetaData() {
-	dctlcty.SetMetadata(AwsRouteResourceType, AwsRouteTags, AwsRouteNormalizer)
-}
-
-var AwsRouteTags = map[string]string{
-	"destination_prefix_list_id": `computed:"true"`,
-	"egress_only_gateway_id":     `computed:"true"`,
-	"gateway_id":                 `computed:"true"`,
-	"id":                         `computed:"true"`,
-	"instance_id":                `computed:"true"`,
-	"instance_owner_id":          `computed:"true"`,
-	"local_gateway_id":           `computed:"true"`,
-	"nat_gateway_id":             `computed:"true"`,
-	"network_interface_id":       `computed:"true"`,
-	"origin":                     `computed:"true"`,
-	"state":                      `computed:"true"`,
-}
-
-func AwsRouteNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"timeouts"})
+func initAwsRouteMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRouteResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"timeouts"})
+	})
 }
