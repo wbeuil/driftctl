@@ -169,7 +169,7 @@ func scanRun(opts *ScanOptions) error {
 
 	scanner := pkg.NewScanner(supplierLibrary.Suppliers(), alerter, resourceSchemaRepository)
 
-	iacSupplier, err := supplier.GetIACSupplier(opts.From, providerLibrary, opts.BackendOptions)
+	iacSupplier, err := supplier.GetIACSupplier(opts.From, providerLibrary, opts.BackendOptions, resourceSchemaRepository)
 	if err != nil {
 		return err
 	}

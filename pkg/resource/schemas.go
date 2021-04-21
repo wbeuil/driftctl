@@ -40,7 +40,9 @@ type SchemaRepository struct {
 }
 
 func NewSchemaRepository() *SchemaRepository {
-	return &SchemaRepository{}
+	return &SchemaRepository{
+		schemas: make(map[string]*Schema),
+	}
 }
 
 func (r *SchemaRepository) addSchema(resourceType string, metadata *Schema) {

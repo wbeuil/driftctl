@@ -13,6 +13,37 @@ type Resource interface {
 	CtyValue() *cty.Value
 }
 
+var refactoredResources = []string{
+	"aws_s3_bucket",
+}
+
+func IsRefactoredResource(typ string) bool {
+	for _, refactoredResource := range refactoredResources {
+		if typ == refactoredResource {
+			return true
+		}
+	}
+	return false
+}
+
+type AbstractResource struct {
+	Id    string
+	Type  string
+	Attrs map[string]interface{}
+}
+
+func (a *AbstractResource) TerraformId() string {
+	return a.Id
+}
+
+func (a *AbstractResource) TerraformType() string {
+	return a.Type
+}
+
+func (a *AbstractResource) CtyValue() *cty.Value {
+	return nil
+}
+
 type ResourceFactory interface {
 	CreateResource(data interface{}, ty string) (*cty.Value, error)
 }

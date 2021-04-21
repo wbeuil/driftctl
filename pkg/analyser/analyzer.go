@@ -6,7 +6,6 @@ import (
 
 	resourceaws "github.com/cloudskiff/driftctl/pkg/resource/aws"
 	"github.com/cloudskiff/driftctl/pkg/resource/cty"
-
 	"github.com/r3labs/diff/v2"
 
 	"github.com/cloudskiff/driftctl/pkg/alerter"
@@ -84,10 +83,21 @@ func (a Analyzer) Analyze(remoteResources, resourcesFromState []resource.Resourc
 		filteredRemoteResource = removeResourceByIndex(i, filteredRemoteResource)
 		analysis.AddManaged(stateRes)
 
-		state := cty.ToCtyAttributes(stateRes.CtyValue())
-		rem := cty.ToCtyAttributes(remoteRes.CtyValue())
+		var stateAttrs map[string]interface{}
+		if res, ok := stateRes.(*resource.AbstractResource); ok {
+			stateAttrs = res.Attrs
+		} else {
+			stateAttrs = cty.ToCtyAttributes(stateRes.CtyValue()).Attrs
+		}
 
-		delta, _ := diff.Diff(state.Attrs, rem.Attrs)
+		var remoteAttrs map[string]interface{}
+		if res, ok := remoteRes.(*resource.AbstractResource); ok {
+			remoteAttrs = res.Attrs
+		} else {
+			remoteAttrs = cty.ToCtyAttributes(stateRes.CtyValue()).Attrs
+		}
+
+		delta, _ := diff.Diff(stateAttrs, remoteAttrs)
 		if len(delta) > 0 {
 			sort.Slice(delta, func(i, j int) bool {
 				return strings.Join(delta[i].Path, ".") < strings.Join(delta[j].Path, ".") || delta[i].Type < delta[j].Type

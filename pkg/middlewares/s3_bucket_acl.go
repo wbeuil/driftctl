@@ -24,7 +24,12 @@ func (m S3BucketAcl) Execute(remoteResources, resourcesFromState *[]resource.Res
 			continue
 		}
 
-		decodedIacResource, _ := iacResource.(*aws.AwsS3Bucket)
+		// TODO make this work with abstract resource
+		decodedIacResource, ok := iacResource.(*aws.AwsS3Bucket)
+
+		if !ok {
+			continue
+		}
 
 		for _, remoteResource := range *remoteResources {
 			if resource.IsSameResource(remoteResource, decodedIacResource) {
