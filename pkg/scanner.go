@@ -3,16 +3,12 @@ package pkg
 import (
 	"context"
 
-	"github.com/cloudskiff/driftctl/pkg/remote"
-	"github.com/cloudskiff/driftctl/pkg/resource/cty"
-	"github.com/pkg/errors"
-	"github.com/zclconf/go-cty/cty/gocty"
-
-	"github.com/cloudskiff/driftctl/pkg/parallel"
-	"github.com/sirupsen/logrus"
-
 	"github.com/cloudskiff/driftctl/pkg/alerter"
+	"github.com/cloudskiff/driftctl/pkg/parallel"
+	"github.com/cloudskiff/driftctl/pkg/remote"
 	"github.com/cloudskiff/driftctl/pkg/resource"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type Scanner struct {
@@ -62,18 +58,25 @@ loop:
 				break loop
 			}
 			for _, res := range resources.([]resource.Resource) {
+
+				if resource.IsRefactoredResource(res.TerraformType()) {
+					schema, exist := s.resourceSchemaRepository.GetSchema(res.TerraformType())
+					ctyAttr := resource.ToResourceAttributes(res.CtyValue())
+					if exist && schema.NormalizeFunc != nil {
+						schema.NormalizeFunc(ctyAttr)
+					}
+
+					newRes := &resource.AbstractResource{
+						Id:    res.TerraformId(),
+						Type:  res.TerraformType(),
+						Attrs: ctyAttr,
+					}
+					results = append(results, newRes)
+					continue
+				}
+
 				normalisable, ok := res.(resource.NormalizedResource)
 				if ok {
-					schema, exist := s.resourceSchemaRepository.GetSchema(res.TerraformType())
-					if exist {
-						ctyAttr := cty.ToCtyAttributes(res.CtyValue())
-						schema.NormalizeFunc(ctyAttr)
-						ctyVal, err := gocty.ToCtyValue(ctyAttr, res.CtyValue().Type())
-						if err != nil {
-							return nil, err
-						}
-						*res.CtyValue() = ctyVal
-					}
 					normalizedRes, err := normalisable.NormalizeForProvider()
 
 					if err != nil {

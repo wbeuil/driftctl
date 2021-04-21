@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -48,8 +48,8 @@ func (r *AwsLambdaEventSourceMapping) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsLambdaEventSourceMappingMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsLambdaEventSourceMappingResourceType, func(val *rescty.CtyAttributes) {
+func initAwsLambdaEventSourceMappingMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsLambdaEventSourceMappingResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"last_modified"})
 		val.SafeDelete([]string{"last_processing_result"})
 		val.SafeDelete([]string{"starting_position"})

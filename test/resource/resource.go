@@ -3,10 +3,11 @@ package resource
 import (
 	"fmt"
 
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	"github.com/cloudskiff/driftctl/test/schemas"
 	"github.com/hashicorp/terraform/configs/configschema"
+	"github.com/hashicorp/terraform/providers"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 type FakeResource struct {
@@ -37,9 +38,7 @@ func (d FakeResource) TerraformId() string {
 
 func (d FakeResource) TerraformType() string {
 	if d.Type != "" {
-		dctlcty.AddMetadata(d.Type, &dctlcty.ResourceMetadata{
-			AttributeMetadata: AttributeMetadata,
-		})
+		// TODO handle dynamic types
 		return d.Type
 	}
 	return "FakeResource"
@@ -71,16 +70,77 @@ func (d *FakeResourceStringer) String() string {
 	return fmt.Sprintf("Name: '%s'", d.Name)
 }
 
-func InitFakeResourceMetadata() {
-	dctlcty.AddMetadata("FakeResource", &dctlcty.ResourceMetadata{
-		AttributeMetadata: AttributeMetadata,
+func InitFakeSchemaRepository(provider, version string) resource.SchemaRepositoryInterface {
+	repo := resource.NewSchemaRepository()
+	schema := make(map[string]providers.Schema)
+	if provider != "" {
+		s, err := schemas.ReadTestSchema(provider, version)
+		if err != nil {
+			// TODO HANDLER ERROR PROPERLY
+			panic(err)
+		}
+		schema = s
+	}
+	schema["FakeResource"] = providers.Schema{
+		Version: 0,
+		Block: &configschema.Block{
+			Attributes: map[string]*configschema.Attribute{
+				"id": {
+					Computed: false,
+				},
+				"foo_bar": {
+					Computed: false,
+				},
+				"bar_foo": {
+					Computed: true,
+				},
+				"json": {
+					Computed: false,
+				},
+				"tags": {
+					Computed: false,
+				},
+				"custom_map": {
+					Computed: false,
+				},
+				"slice": {
+					Computed: false,
+				},
+				"struct_slice": {
+					Computed: false,
+				},
+			},
+			BlockTypes: map[string]*configschema.NestedBlock{
+				"struct": {
+					Block: configschema.Block{
+						Attributes: map[string]*configschema.Attribute{
+							"baz": {
+								Computed: true,
+							},
+							"bar": {},
+						},
+					},
+				},
+				"struct_slice": {
+					Block: configschema.Block{
+						Attributes: map[string]*configschema.Attribute{
+							"string": {
+								Computed: true,
+							},
+							"array": {
+								Computed: true,
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+	repo.Init(schema)
+	repo.UpdateSchema("FakeResource", map[string]func(attributeSchema *resource.AttributeSchema){
+		"json": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
 	})
-}
-
-var AttributeMetadata = map[string]dctlcty.AttributeMetadata{
-	"bar_foo":             {Configshema: configschema.Attribute{Computed: true}},
-	"json":                {JsonString: true},
-	"struct.baz":          {Configshema: configschema.Attribute{Computed: true}},
-	"struct_slice.string": {Configshema: configschema.Attribute{Computed: true}},
-	"struct_slice.array":  {Configshema: configschema.Attribute{Computed: true}},
+	return repo
 }

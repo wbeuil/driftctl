@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -37,8 +37,8 @@ func (r *AwsSecurityGroupRule) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSecurityGroupRuleMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsSecurityGroupRuleResourceType, func(val *rescty.CtyAttributes) {
+func initAwsSecurityGroupRuleMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsSecurityGroupRuleResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"self"})
 	})
 }

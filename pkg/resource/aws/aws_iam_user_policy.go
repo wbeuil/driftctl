@@ -29,7 +29,7 @@ func (r *AwsIamUserPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamUserPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+func initAwsIamUserPolicyMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.UpdateSchema(AwsIamUserPolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
 		"policy": func(attributeSchema *resource.AttributeSchema) {
 			attributeSchema.JsonString = true

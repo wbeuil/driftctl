@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -55,8 +55,8 @@ func (r *AwsRoute53Record) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRoute53RecordMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53RecordResourceType, func(val *rescty.CtyAttributes) {
+func initAwsRoute53RecordMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53RecordResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"allow_overwrite"})
 		val.SafeDelete([]string{"name"})
 	})

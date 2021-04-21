@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -37,8 +37,8 @@ func (r *AwsRoute53Zone) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRoute53ZoneMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53ZoneResourceType, func(val *rescty.CtyAttributes) {
+func initAwsRoute53ZoneMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRoute53ZoneResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"force_destroy"})
 	})
 }

@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -33,8 +33,8 @@ func (r *AwsIamUser) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamUserMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsIamUserResourceType, func(val *rescty.CtyAttributes) {
+func initAwsIamUserMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamUserResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"force_destroy"})
 	})
 }

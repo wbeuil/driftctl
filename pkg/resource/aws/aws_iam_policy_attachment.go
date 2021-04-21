@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -31,8 +31,8 @@ func (r *AwsIamPolicyAttachment) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamPolicyAttachmentMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsIamPolicyAttachmentResourceType, func(val *rescty.CtyAttributes) {
+func initAwsIamPolicyAttachmentMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamPolicyAttachmentResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"name"})
 	})
 }

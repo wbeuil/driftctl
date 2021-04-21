@@ -23,8 +23,14 @@ import (
 	testresource "github.com/cloudskiff/driftctl/test/resource"
 )
 
+type TestProvider struct {
+	Name    string
+	Version string
+}
+
 type TestCase struct {
 	name            string
+	provider        *TestProvider
 	stateResources  []resource.Resource
 	remoteResources []resource.Resource
 	filter          string
@@ -35,10 +41,16 @@ type TestCase struct {
 type TestCases []TestCase
 
 func runTest(t *testing.T, cases TestCases) {
-	testresource.InitFakeResourceMetadata()
-	aws.InitResourcesMetadata()
-	github.InitMetadatas()
 	for _, c := range cases {
+		if c.provider == nil {
+			c.provider = &TestProvider{
+				Name:    "aws",
+				Version: "3.19.0",
+			}
+		}
+		repo := testresource.InitFakeSchemaRepository(c.provider.Name, c.provider.Version)
+		aws.InitResourcesMetadata(repo)
+		github.InitMetadatas(repo)
 		t.Run(c.name, func(t *testing.T) {
 			testAlerter := alerter.NewAlerter()
 
@@ -89,7 +101,7 @@ func runTest(t *testing.T, cases TestCases) {
 				c.mocks(resourceFactory)
 			}
 
-			driftctl := pkg.NewDriftCTL(remoteSupplier, stateSupplier, filter, testAlerter, resourceFactory)
+			driftctl := pkg.NewDriftCTL(remoteSupplier, stateSupplier, filter, testAlerter, resourceFactory, repo)
 
 			analysis, err := driftctl.Run()
 
@@ -161,7 +173,7 @@ func TestDriftctlRun_BasicBehavior(t *testing.T) {
 				result.AssertResourceHasDrift("fake", "FakeResource", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"foo_bar"},
+						Path: []string{"FooBar"},
 						From: "barfoo",
 						To:   "foobar",
 					},
@@ -188,7 +200,7 @@ func TestDriftctlRun_BasicBehavior(t *testing.T) {
 				result.AssertResourceHasDrift("fake", "FakeResource", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"bar_foo"},
+						Path: []string{"BarFoo"},
 						From: "barfoo",
 						To:   "foobar",
 					},
@@ -217,7 +229,7 @@ func TestDriftctlRun_BasicBehavior(t *testing.T) {
 				result.AssertResourceHasDrift("fake", "FakeResource", analyser.Change{
 					Change: diff.Change{
 						Type: diff.DELETE,
-						Path: []string{"tags", "tag1"},
+						Path: []string{"Tags", "tag1"},
 						From: "deleted",
 						To:   nil,
 					},
@@ -246,7 +258,7 @@ func TestDriftctlRun_BasicBehavior(t *testing.T) {
 				result.AssertResourceHasDrift("fake", "FakeResource", analyser.Change{
 					Change: diff.Change{
 						Type: diff.CREATE,
-						Path: []string{"tags", "tag1"},
+						Path: []string{"Tags", "tag1"},
 						From: nil,
 						To:   "added",
 					},
@@ -375,7 +387,7 @@ func TestDriftctlRun_Middlewares(t *testing.T) {
 				result.AssertResourceHasDrift("foo", "aws_s3_bucket_policy", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"policy"},
+						Path: []string{"Policy"},
 						From: "{\"Id\":\"foo\"}",
 						To:   "{\"Id\":\"bar\"}",
 					},
@@ -491,18 +503,20 @@ func TestDriftctlRun_Middlewares(t *testing.T) {
 				result.AssertResourceHasDrift("vol-02862d9b39045a3a4", "aws_ebs_volume", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"type"},
+						Path: []string{"Type"},
 						From: "gp2",
 						To:   "gp3",
 					},
+					Computed: true,
 				})
 				result.AssertResourceHasDrift("vol-018c5ae89895aca4c", "aws_ebs_volume", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"encrypted"},
+						Path: []string{"Encrypted"},
 						From: true,
 						To:   false,
 					},
+					Computed: true,
 				})
 			},
 		},
@@ -668,7 +682,7 @@ func TestDriftctlRun_Middlewares(t *testing.T) {
 				result.AssertResourceHasDrift("foo", "aws_sns_topic_policy", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"policy"},
+						Path: []string{"Policy"},
 						From: "{\"policy\":\"bar\"}",
 						To:   "{\"policy\":\"baz\"}",
 					},
@@ -719,7 +733,7 @@ func TestDriftctlRun_Middlewares(t *testing.T) {
 				result.AssertResourceHasDrift("foo", "aws_sqs_queue_policy", analyser.Change{
 					Change: diff.Change{
 						Type: diff.UPDATE,
-						Path: []string{"policy"},
+						Path: []string{"Policy"},
 						From: "{\"policy\":\"bar\"}",
 						To:   "{\"policy\":\"baz\"}",
 					},

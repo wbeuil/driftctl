@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -37,8 +37,8 @@ func (r *AwsEbsVolume) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsEbsVolumeMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsEbsVolumeResourceType, func(val *rescty.CtyAttributes) {
+func initAwsEbsVolumeMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsEbsVolumeResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"arn"})
 		val.SafeDelete([]string{"outpost_arn"})
 		val.SafeDelete([]string{"snapshot_id"})

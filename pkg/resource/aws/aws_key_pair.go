@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -33,8 +33,8 @@ func (r *AwsKeyPair) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsKeyPairMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsKeyPairResourceType, func(val *rescty.CtyAttributes) {
+func initAwsKeyPairMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsKeyPairResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"key_name_prefix"})
 		val.SafeDelete([]string{"public_key"})
 	})

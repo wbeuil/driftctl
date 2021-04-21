@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -55,8 +55,8 @@ func (r *AwsDefaultSecurityGroup) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDefaultSecurityGroupMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsDefaultSecurityGroupResourceType, func(val *rescty.CtyAttributes) {
+func initAwsDefaultSecurityGroupMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDefaultSecurityGroupResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"revoke_rules_on_delete"})
 	})
 }

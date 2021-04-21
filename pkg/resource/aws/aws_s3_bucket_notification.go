@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -48,8 +48,8 @@ func (r *AwsS3BucketNotification) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketNotificationMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketNotificationResourceType, func(val *rescty.CtyAttributes) {
+func initAwsS3BucketNotificationMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketNotificationResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"id"})
 		val.SafeDelete([]string{"bucket"})
 	})

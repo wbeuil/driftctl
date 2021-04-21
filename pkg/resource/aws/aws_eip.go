@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -47,8 +47,8 @@ func (r *AwsEip) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsEipMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsEipResourceType, func(val *rescty.CtyAttributes) {
+func initAwsEipMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsEipResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"timeouts"})
 	})
 }

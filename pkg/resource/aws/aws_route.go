@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -46,8 +46,8 @@ func (r *AwsRoute) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsRouteMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsRouteResourceType, func(val *rescty.CtyAttributes) {
+func initAwsRouteMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsRouteResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"timeouts"})
 	})
 }

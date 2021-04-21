@@ -11,8 +11,6 @@ import (
 	"github.com/zclconf/go-cty/cty/gocty"
 
 	"github.com/cloudskiff/driftctl/mocks"
-	"github.com/cloudskiff/driftctl/pkg/resource/github"
-
 	"github.com/stretchr/testify/assert"
 
 	testresource "github.com/cloudskiff/driftctl/test/resource"
@@ -233,7 +231,7 @@ func TestAnalyze(t *testing.T) {
 									From: "barfoo",
 									To:   "foobar",
 									Path: []string{
-										"bar_foo",
+										"BarFoo",
 									},
 								},
 								Computed: true,
@@ -244,7 +242,7 @@ func TestAnalyze(t *testing.T) {
 									From: "foobar",
 									To:   "barfoo",
 									Path: []string{
-										"foo_bar",
+										"FooBar",
 									},
 								},
 							},
@@ -254,8 +252,8 @@ func TestAnalyze(t *testing.T) {
 									From: "bar",
 									To:   "baz",
 									Path: []string{
-										"struct",
-										"bar",
+										"Struct",
+										"Bar",
 									},
 								},
 							},
@@ -265,8 +263,8 @@ func TestAnalyze(t *testing.T) {
 									From: "baz",
 									To:   "bar",
 									Path: []string{
-										"struct",
-										"baz",
+										"Struct",
+										"Baz",
 									},
 								},
 								Computed: true,
@@ -311,7 +309,7 @@ func TestAnalyze(t *testing.T) {
 						FooBar: "foobar",
 						BarFoo: "barfoo",
 					},
-					path: []string{"foo_bar"},
+					path: []string{"FooBar"},
 				},
 			},
 			expected: Analysis{
@@ -343,7 +341,7 @@ func TestAnalyze(t *testing.T) {
 									From: "barfoo",
 									To:   "foobar",
 									Path: []string{
-										"bar_foo",
+										"BarFoo",
 									},
 								},
 								Computed: true,
@@ -393,7 +391,7 @@ func TestAnalyze(t *testing.T) {
 						FooBar: "foobar",
 						BarFoo: "barfoo",
 					},
-					path: []string{"foo_bar"},
+					path: []string{"FooBar"},
 				},
 				{
 					res: &testresource.FakeResource{
@@ -401,7 +399,7 @@ func TestAnalyze(t *testing.T) {
 						FooBar: "foobar",
 						BarFoo: "barfoo",
 					},
-					path: []string{"bar_foo"},
+					path: []string{"BarFoo"},
 				},
 			},
 			expected: Analysis{
@@ -578,7 +576,7 @@ func TestAnalyze(t *testing.T) {
 									From: "barfoo",
 									To:   "foobar",
 									Path: []string{
-										"bar_foo",
+										"BarFoo",
 									},
 								},
 								Computed: true,
@@ -589,7 +587,7 @@ func TestAnalyze(t *testing.T) {
 									From: "foobar",
 									To:   "barfoo",
 									Path: []string{
-										"foo_bar",
+										"FooBar",
 									},
 								},
 							},
@@ -599,8 +597,8 @@ func TestAnalyze(t *testing.T) {
 									From: "bar",
 									To:   "baz",
 									Path: []string{
-										"struct",
-										"bar",
+										"Struct",
+										"Bar",
 									},
 								},
 							},
@@ -610,8 +608,8 @@ func TestAnalyze(t *testing.T) {
 									From: "baz",
 									To:   "bar",
 									Path: []string{
-										"struct",
-										"baz",
+										"Struct",
+										"Baz",
 									},
 								},
 								Computed: true,
@@ -622,9 +620,9 @@ func TestAnalyze(t *testing.T) {
 									From: "foo",
 									To:   "oof",
 									Path: []string{
-										"struct_slice",
+										"StructSlice",
 										"0",
-										"array",
+										"Array",
 										"0",
 									},
 								},
@@ -636,9 +634,9 @@ func TestAnalyze(t *testing.T) {
 									From: "one",
 									To:   "two",
 									Path: []string{
-										"struct_slice",
+										"StructSlice",
 										"0",
-										"string",
+										"String",
 									},
 								},
 								Computed: true,
@@ -781,9 +779,8 @@ func TestAnalyze(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			testresource.InitFakeResourceMetadata()
-			aws.InitResourcesMetadata()
-			github.InitMetadatas()
+			repo := testresource.InitFakeSchemaRepository("aws", "3.19.0")
+			aws.InitResourcesMetadata(repo)
 			for _, r := range c.cloud {
 				fres, ok := r.(*testresource.FakeResource)
 				if ok {
@@ -868,7 +865,7 @@ func TestAnalyze(t *testing.T) {
 				al.SetAlerts(c.alerts)
 			}
 
-			analyzer := NewAnalyzer(al)
+			analyzer := NewAnalyzer(al, repo)
 			result, err := analyzer.Analyze(c.cloud, c.iac, filter)
 
 			if err != nil {

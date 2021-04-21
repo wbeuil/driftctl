@@ -27,7 +27,7 @@ func (r *AwsSqsQueuePolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSqsQueuePolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+func initAwsSqsQueuePolicyMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.UpdateSchema(AwsSqsQueuePolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
 		"policy": func(attributeSchema *resource.AttributeSchema) {
 			attributeSchema.JsonString = true

@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -36,8 +36,8 @@ func (r *AwsKmsKey) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsKmsKeyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsKmsKeyResourceType, func(val *rescty.CtyAttributes) {
+func initAwsKmsKeyMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsKmsKeyResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"deletion_window_in_days"})
 	})
 }

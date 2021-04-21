@@ -34,7 +34,7 @@ func (r *AwsSnsTopicSubscription) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsSnsTopicSubscriptionMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+func initAwsSnsTopicSubscriptionMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.UpdateSchema(AwsSnsTopicSubscriptionResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
 		"delivery_policy": func(attributeSchema *resource.AttributeSchema) {
 			attributeSchema.JsonString = true

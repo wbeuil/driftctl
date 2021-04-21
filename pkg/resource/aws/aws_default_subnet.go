@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -42,8 +42,8 @@ func (r *AwsDefaultSubnet) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDefaultSubnetMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsDefaultSubnetResourceType, func(val *rescty.CtyAttributes) {
+func initAwsDefaultSubnetMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDefaultSubnetResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"timeouts"})
 	})
 }

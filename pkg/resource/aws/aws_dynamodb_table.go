@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -76,8 +76,8 @@ func (r *AwsDynamodbTable) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDynamodbTableMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsDynamodbTableResourceType, func(val *rescty.CtyAttributes) {
+func initAwsDynamodbTableMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDynamodbTableResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"timeouts"})
 	})
 }

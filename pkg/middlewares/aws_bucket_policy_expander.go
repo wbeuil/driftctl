@@ -27,7 +27,14 @@ func (m AwsBucketPolicyExpander) Execute(_, resourcesFromState *[]resource.Resou
 			continue
 		}
 
-		bucket, _ := res.(*aws.AwsS3Bucket)
+		// TODO make this work with abstract resource
+		bucket, ok := res.(*aws.AwsS3Bucket)
+
+		if !ok {
+			newList = append(newList, res)
+			continue
+		}
+
 		newList = append(newList, res)
 
 		if hasPolicyAttached(bucket, resourcesFromState) {

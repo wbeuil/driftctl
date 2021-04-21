@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -80,8 +80,8 @@ func (r *AwsLambdaFunction) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsLambdaFunctionMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsLambdaFunctionResourceType, func(val *rescty.CtyAttributes) {
+func initAwsLambdaFunctionMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsLambdaFunctionResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"filename"})
 		val.SafeDelete([]string{"publish"})
 		val.SafeDelete([]string{"timeouts"})

@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -38,13 +38,13 @@ func (r *AwsIamRole) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamRoleMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+func initAwsIamRoleMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.UpdateSchema(AwsIamRoleResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
 		"assume_role_policy": func(attributeSchema *resource.AttributeSchema) {
 			attributeSchema.JsonString = true
 		},
 	})
-	resourceSchemaRepository.SetNormalizeFunc(AwsIamRoleResourceType, func(val *rescty.CtyAttributes) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamRoleResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"force_detach_policies"})
 	})
 }

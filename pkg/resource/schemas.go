@@ -3,7 +3,6 @@ package resource
 import (
 	"strings"
 
-	"github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/hashicorp/terraform/configs/configschema"
 	"github.com/hashicorp/terraform/providers"
 	"github.com/sirupsen/logrus"
@@ -16,7 +15,7 @@ type AttributeSchema struct {
 
 type Schema struct {
 	Attributes    map[string]AttributeSchema
-	NormalizeFunc func(val *cty.CtyAttributes)
+	NormalizeFunc func(val *ResourceAttributes)
 }
 
 func (s *Schema) IsComputedField(path []string) bool {
@@ -35,12 +34,20 @@ func (s *Schema) IsJsonStringField(path []string) bool {
 	return metadata.JsonString
 }
 
+type SchemaRepositoryInterface interface {
+	GetSchema(resourceType string) (*Schema, bool)
+	UpdateSchema(typ string, schemasMutators map[string]func(attributeSchema *AttributeSchema))
+	SetNormalizeFunc(typ string, normalizeFunc func(val *ResourceAttributes))
+}
+
 type SchemaRepository struct {
 	schemas map[string]*Schema
 }
 
 func NewSchemaRepository() *SchemaRepository {
-	return &SchemaRepository{}
+	return &SchemaRepository{
+		schemas: make(map[string]*Schema),
+	}
 }
 
 func (r *SchemaRepository) addSchema(resourceType string, metadata *Schema) {
@@ -98,7 +105,7 @@ func (r *SchemaRepository) UpdateSchema(typ string, schemasMutators map[string]f
 	}
 }
 
-func (r *SchemaRepository) SetNormalizeFunc(typ string, normalizeFunc func(val *cty.CtyAttributes)) {
+func (r *SchemaRepository) SetNormalizeFunc(typ string, normalizeFunc func(val *ResourceAttributes)) {
 	metadata, exist := r.GetSchema(typ)
 	if !exist {
 		logrus.WithFields(logrus.Fields{"type": typ}).Warning("Unable to set normalize func, no schema found")

@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -28,8 +28,8 @@ func (r *AwsS3BucketPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketPolicyResourceType, func(val *rescty.CtyAttributes) {
+func initAwsS3BucketPolicyMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketPolicyResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"bucket"})
 		val.SafeDelete([]string{"id"})
 	})

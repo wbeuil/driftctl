@@ -11,7 +11,7 @@ import (
 type Change struct {
 	diff.Change
 	Computed   bool `json:"computed"`
-	JsonString bool
+	JsonString bool `json:"-"`
 }
 
 type Changelog []Change

@@ -29,7 +29,7 @@ func (r *AwsIamRolePolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamRolePolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+func initAwsIamRolePolicyMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.UpdateSchema(AwsIamRolePolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
 		"policy": func(attributeSchema *resource.AttributeSchema) {
 			attributeSchema.JsonString = true

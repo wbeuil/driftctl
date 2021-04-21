@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -32,8 +32,8 @@ func (r *AwsDbSubnetGroup) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDbSubnetGroupMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsDbSubnetGroupResourceType, func(val *rescty.CtyAttributes) {
+func initAwsDbSubnetGroupMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDbSubnetGroupResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"name_prefix"})
 	})
 }

@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -137,9 +137,15 @@ func (r *AwsS3Bucket) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsS3BucketMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketResourceType, func(val *rescty.CtyAttributes) {
-		val.SafeDelete([]string{"acl"})
+func initAwsS3BucketMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsS3BucketResourceType, func(val *resource.ResourceAttributes) {
+		// In the state on a first apply, tags is set to null and it cause a drift
+		// when compared to an empty map, after a terraform refresh the state is modified to an empty object
+		// The case below cover a nil attribute in the state by setting it to an empty map.
+		tags, exist := val.Get("tags")
+		if exist && tags == nil {
+			val.SafeSet([]string{"tags"}, map[string]interface{}{})
+		}
 		val.SafeDelete([]string{"force_destroy"})
 	})
 	resourceSchemaRepository.UpdateSchema(AwsS3BucketResourceType, map[string]func(attributeSchema *resource.AttributeSchema){

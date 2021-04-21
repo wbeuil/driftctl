@@ -12,7 +12,6 @@ import (
 	"github.com/zclconf/go-cty/cty/gocty"
 
 	"github.com/cloudskiff/driftctl/pkg/resource/aws"
-	"github.com/cloudskiff/driftctl/pkg/resource/github"
 	"github.com/cloudskiff/driftctl/test/goldenfile"
 	testresource "github.com/cloudskiff/driftctl/test/resource"
 
@@ -74,9 +73,8 @@ func TestConsole_Write(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testresource.InitFakeResourceMetadata()
-			aws.InitResourcesMetadata()
-			github.InitMetadatas()
+			repo := testresource.InitFakeSchemaRepository("aws", "3.19.0")
+			aws.InitResourcesMetadata(repo)
 			for _, res := range tt.args.analysis.Managed() {
 				fakeRes, ok := res.(*testresource.FakeResource)
 				if ok {

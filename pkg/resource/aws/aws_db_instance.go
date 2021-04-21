@@ -3,7 +3,7 @@ package aws
 
 import (
 	"github.com/cloudskiff/driftctl/pkg/resource"
-	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
+
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -102,8 +102,8 @@ func (r *AwsDbInstance) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsDbInstanceMetaData(resourceSchemaRepository *resource.SchemaRepository) {
-	resourceSchemaRepository.SetNormalizeFunc(AwsDbInstanceResourceType, func(val *rescty.CtyAttributes) {
+func initAwsDbInstanceMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsDbInstanceResourceType, func(val *resource.ResourceAttributes) {
 		val.SafeDelete([]string{"delete_automated_backups"})
 		val.SafeDelete([]string{"latest_restorable_time"})
 		val.SafeDelete([]string{"password"})
