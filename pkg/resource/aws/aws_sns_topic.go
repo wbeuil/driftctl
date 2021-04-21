@@ -58,5 +58,5 @@ var AwsSnsTopicTags = map[string]string{
 	"policy":          `computed:"true" jsonstring:"true"`,
 }
 
-func AwsSnsTopicNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSnsTopicNormalizer(val *rescty.CtyAttributes) {
 }

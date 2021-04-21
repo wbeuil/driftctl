@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsAmiResourceType = "aws_ami"
@@ -58,8 +58,8 @@ func (r *AwsAmi) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsAmiMetaData() {
-	dctlcty.SetNormalizer(AwsAmiResourceType, func(val *dctlcty.CtyAttributes) {
+func initAwsAmiMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsAmiResourceType, func(val *rescty.CtyAttributes) {
 		val.SafeDelete([]string{"timeouts"})
 	})
 }

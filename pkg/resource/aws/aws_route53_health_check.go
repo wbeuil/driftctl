@@ -55,5 +55,5 @@ var AwsRoute53HealthCheckTags = map[string]string{
 	"id":         `computed:"true"`,
 }
 
-func AwsRoute53HealthCheckNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRoute53HealthCheckNormalizer(val *rescty.CtyAttributes) {
 }

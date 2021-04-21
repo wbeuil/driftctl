@@ -54,6 +54,6 @@ var AwsEcrRepositoryTags = map[string]string{
 	"encryption_configuration.kms_key": `computed:"true"`,
 }
 
-func AwsEcrRepositoryNormalizer(val *dctlcty.CtyAttributes) {
+func AwsEcrRepositoryNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

@@ -89,6 +89,6 @@ var AwsDynamodbTableTags = map[string]string{
 	"server_side_encryption.kms_key_arn": `computed:"true"`,
 }
 
-func AwsDynamodbTableNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDynamodbTableNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

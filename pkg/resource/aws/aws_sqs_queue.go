@@ -53,5 +53,5 @@ var AwsSqsQueueTags = map[string]string{
 	"policy":                            `computed:"true"`,
 }
 
-func AwsSqsQueueNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSqsQueueNormalizer(val *rescty.CtyAttributes) {
 }

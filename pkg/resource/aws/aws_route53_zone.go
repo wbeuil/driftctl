@@ -48,6 +48,6 @@ var AwsRoute53ZoneTags = map[string]string{
 	"vpc.vpc_region": `computed:"true"`,
 }
 
-func AwsRoute53ZoneNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRoute53ZoneNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"force_destroy"})
 }

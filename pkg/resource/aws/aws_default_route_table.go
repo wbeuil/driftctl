@@ -54,5 +54,5 @@ var AwsDefaultRouteTableTags = map[string]string{
 	"vpc_id":   "computed:\"true\"",
 }
 
-func AwsDefaultRouteTableNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDefaultRouteTableNormalizer(val *rescty.CtyAttributes) {
 }

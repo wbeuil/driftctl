@@ -46,5 +46,5 @@ var AwsIamAccessKeyTags = map[string]string{
 	"status":               `computed:"true"`,
 }
 
-func AwsIamAccessKeyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamAccessKeyNormalizer(val *rescty.CtyAttributes) {
 }

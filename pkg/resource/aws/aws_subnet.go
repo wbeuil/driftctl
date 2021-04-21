@@ -55,6 +55,6 @@ var AwsSubnetTags = map[string]string{
 	"owner_id":                       `computed:"true"`,
 }
 
-func AwsSubnetNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSubnetNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

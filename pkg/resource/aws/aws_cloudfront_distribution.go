@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsCloudfrontDistributionResourceType = "aws_cloudfront_distribution"
@@ -160,8 +160,8 @@ func (r *AwsCloudfrontDistribution) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsCloudfrontDistributionMetaData() {
-	dctlcty.SetNormalizer(AwsCloudfrontDistributionResourceType, func(val *dctlcty.CtyAttributes) {
+func initAwsCloudfrontDistributionMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsCloudfrontDistributionResourceType, func(val *rescty.CtyAttributes) {
 		val.SafeDelete([]string{"etag"})
 		val.SafeDelete([]string{"last_modified_time"})
 		val.SafeDelete([]string{"retain_on_delete"})

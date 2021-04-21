@@ -43,6 +43,6 @@ var AwsIamUserTags = map[string]string{
 	"unique_id": `computed:"true"`,
 }
 
-func AwsIamUserNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamUserNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"force_destroy"})
 }

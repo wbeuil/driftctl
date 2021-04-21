@@ -37,7 +37,7 @@ var AwsS3BucketPolicyTags = map[string]string{
 	"policy": `jsonstring:"true"`,
 }
 
-func AwsS3BucketPolicyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketPolicyNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"bucket"})
 	val.SafeDelete([]string{"id"})
 }

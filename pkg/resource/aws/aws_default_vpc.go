@@ -66,5 +66,5 @@ var AwsDefaultVpcTags = map[string]string{
 	"owner_id":                         `computed:"true"`,
 }
 
-func AwsDefaultVpcNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDefaultVpcNormalizer(val *rescty.CtyAttributes) {
 }

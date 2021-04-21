@@ -12,7 +12,6 @@ import (
 	"github.com/r3labs/diff/v2"
 
 	"github.com/cloudskiff/driftctl/pkg/analyser"
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 	"github.com/cloudskiff/driftctl/pkg/remote"
 	"github.com/cloudskiff/driftctl/pkg/resource"
 )
@@ -78,9 +77,7 @@ func (c *Console) Write(analysis *analyser.Analysis) error {
 					pref = fmt.Sprintf("%s %s:", color.RedString("-"), path)
 				}
 				if change.Type == diff.UPDATE {
-					attr := dctlcty.AsAttrs(difference.Res.CtyValue(), difference.Res.TerraformType())
-					isJsonString := attr.IsJsonStringField(change.Path)
-					if isJsonString {
+					if change.JsonString {
 						prefix := "        "
 						fmt.Printf("    %s\n%s%s\n", pref, prefix, jsonDiff(change.From, change.To, prefix))
 						continue

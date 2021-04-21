@@ -68,6 +68,6 @@ var AwsEipTags = map[string]string{
 	"vpc":                  `computed:"true"`,
 }
 
-func AwsEipNormalizer(val *dctlcty.CtyAttributes) {
+func AwsEipNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

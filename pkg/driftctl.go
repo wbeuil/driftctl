@@ -23,8 +23,8 @@ type DriftCTL struct {
 	resourceFactory resource.ResourceFactory
 }
 
-func NewDriftCTL(remoteSupplier resource.Supplier, iacSupplier resource.Supplier, filter *jmespath.JMESPath, alerter *alerter.Alerter, resFactory resource.ResourceFactory) *DriftCTL {
-	return &DriftCTL{remoteSupplier, iacSupplier, alerter, analyser.NewAnalyzer(alerter), filter, resFactory}
+func NewDriftCTL(remoteSupplier resource.Supplier, iacSupplier resource.Supplier, filter *jmespath.JMESPath, alerter *alerter.Alerter, resFactory resource.ResourceFactory, resourceSchemaRepository *resource.SchemaRepository) *DriftCTL {
+	return &DriftCTL{remoteSupplier, iacSupplier, alerter, analyser.NewAnalyzer(alerter, resourceSchemaRepository), filter, resFactory}
 }
 
 func (d DriftCTL) Run() (*analyser.Analysis, error) {

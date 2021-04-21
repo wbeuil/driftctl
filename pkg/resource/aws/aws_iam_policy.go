@@ -43,6 +43,6 @@ var AwsIamPolicyTags = map[string]string{
 	"policy": `jsonstring:"true"`,
 }
 
-func AwsIamPolicyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamPolicyNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"name_prefix"})
 }

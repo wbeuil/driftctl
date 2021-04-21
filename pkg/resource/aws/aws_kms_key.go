@@ -48,6 +48,6 @@ var AwsKmsKeyTags = map[string]string{
 	"policy":      `jsonstring:"true" computed:"true"`,
 }
 
-func AwsKmsKeyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsKmsKeyNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"deletion_window_in_days"})
 }

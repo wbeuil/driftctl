@@ -98,7 +98,7 @@ var AwsLambdaFunctionTags = map[string]string{
 	"vpc_config.vpc_id":           `computed:"true"`,
 }
 
-func AwsLambdaFunctionNormalizer(val *dctlcty.CtyAttributes) {
+func AwsLambdaFunctionNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"filename"})
 	val.SafeDelete([]string{"publish"})
 	val.SafeDelete([]string{"timeouts"})

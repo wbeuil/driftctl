@@ -45,7 +45,7 @@ var AwsKeyPairTags = map[string]string{
 	"key_pair_id": `computed:"true"`,
 }
 
-func AwsKeyPairNormalizer(val *dctlcty.CtyAttributes) {
+func AwsKeyPairNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"key_name_prefix"})
 	val.SafeDelete([]string{"public_key"})
 }

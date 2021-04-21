@@ -59,6 +59,6 @@ var AwsDefaultSubnetTags = map[string]string{
 	"vpc_id":                          `computed:"true"`,
 }
 
-func AwsDefaultSubnetNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDefaultSubnetNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

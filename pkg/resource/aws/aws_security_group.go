@@ -70,7 +70,7 @@ var AwsSecurityGroupTags = map[string]string{
 	"vpc_id":   `computed:"true"`,
 }
 
-func AwsSecurityGroupNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSecurityGroupNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"revoke_rules_on_delete"})
 	val.SafeDelete([]string{"timeouts"})
 }

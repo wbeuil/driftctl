@@ -64,6 +64,6 @@ var AwsRouteTags = map[string]string{
 	"state":                      `computed:"true"`,
 }
 
-func AwsRouteNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRouteNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

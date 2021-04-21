@@ -39,6 +39,6 @@ var AwsIamPolicyAttachmentTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsIamPolicyAttachmentNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamPolicyAttachmentNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"name"})
 }

@@ -64,7 +64,7 @@ var AwsLambdaEventSourceMappingTags = map[string]string{
 	"uuid":                          `computed:"true"`,
 }
 
-func AwsLambdaEventSourceMappingNormalizer(val *dctlcty.CtyAttributes) {
+func AwsLambdaEventSourceMappingNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"last_modified"})
 	val.SafeDelete([]string{"last_processing_result"})
 	val.SafeDelete([]string{"starting_position"})

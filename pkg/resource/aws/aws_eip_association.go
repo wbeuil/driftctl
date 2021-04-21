@@ -45,5 +45,5 @@ var AwsEipAssociationTags = map[string]string{
 	"public_ip":            `computed:"true"`,
 }
 
-func AwsEipAssociationNormalizer(val *dctlcty.CtyAttributes) {
+func AwsEipAssociationNormalizer(val *rescty.CtyAttributes) {
 }

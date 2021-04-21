@@ -54,6 +54,6 @@ var AwsRouteTableTags = map[string]string{
 	"route":            `computed:"true"`,
 }
 
-func AwsRouteTableNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRouteTableNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"route"})
 }

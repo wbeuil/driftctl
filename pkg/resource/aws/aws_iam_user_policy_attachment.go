@@ -36,5 +36,5 @@ var AwsIamUserPolicyAttachmentTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsIamUserPolicyAttachmentNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamUserPolicyAttachmentNormalizer(val *rescty.CtyAttributes) {
 }

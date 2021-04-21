@@ -43,5 +43,5 @@ var AwsNatGatewayTags = map[string]string{
 	"public_ip":            `computed:"true"`,
 }
 
-func AwsNatGatewayNormalizer(val *dctlcty.CtyAttributes) {
+func AwsNatGatewayNormalizer(val *rescty.CtyAttributes) {
 }

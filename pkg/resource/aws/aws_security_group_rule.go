@@ -46,6 +46,6 @@ var AwsSecurityGroupRuleTags = map[string]string{
 	"source_security_group_id": `computed:"true"`,
 }
 
-func AwsSecurityGroupRuleNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSecurityGroupRuleNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"self"})
 }

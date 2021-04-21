@@ -2,9 +2,8 @@
 package aws
 
 import (
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsDbInstanceResourceType = "aws_db_instance"
@@ -145,7 +144,7 @@ var AwsDbInstanceTags = map[string]string{
 	"vpc_security_group_ids":                `computed:"true"`,
 }
 
-func AwsDbInstanceNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDbInstanceNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"delete_automated_backups"})
 	val.SafeDelete([]string{"latest_restorable_time"})
 	val.SafeDelete([]string{"password"})

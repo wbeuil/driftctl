@@ -41,7 +41,7 @@ var AwsKmsAliasTags = map[string]string{
 	"target_key_arn": `computed:"true"`,
 }
 
-func AwsKmsAliasNormalizer(val *dctlcty.CtyAttributes) {
+func AwsKmsAliasNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"name"})
 	val.SafeDelete([]string{"name_prefix"})
 }

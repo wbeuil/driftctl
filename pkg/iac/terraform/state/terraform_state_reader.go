@@ -175,6 +175,7 @@ func (r *TerraformStateReader) decode(values map[string][]cty.Value) ([]resource
 			}).Debug("Found IAC resource")
 			normalisable, ok := res.(resource.NormalizedResource)
 			if ok {
+				// TODO
 				normalizedRes, err := normalisable.NormalizeForState()
 				if err != nil {
 					logrus.Errorf("Could not normalize state for res %s: %+v", res.TerraformId(), err)

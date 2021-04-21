@@ -1,6 +1,8 @@
 package github
 
-func InitMetadatas() {
+import "github.com/cloudskiff/driftctl/pkg/resource"
+
+func InitMetadatas(resourceSchemaRepository *resource.SchemaRepository) {
 	initGithubBranchProtectionMetadata()
 	initGithubTeamMembershipMetadata()
 	initGithubMembershipMetadata()

@@ -2,9 +2,8 @@
 package aws
 
 import (
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsDbSubnetGroupResourceType = "aws_db_subnet_group"
@@ -43,6 +42,6 @@ var AwsDbSubnetGroupTags = map[string]string{
 	"name_prefix": `computed:"true"`,
 }
 
-func AwsDbSubnetGroupNormalizer(val *dctlcty.CtyAttributes) {
+func AwsDbSubnetGroupNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"name_prefix"})
 }

@@ -156,7 +156,7 @@ var AwsInstanceTags = map[string]string{
 	"root_block_device.volume_type":                `computed:"true"`,
 }
 
-func AwsInstanceNormalizer(val *dctlcty.CtyAttributes) {
+func AwsInstanceNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"volume_tags"})
 	val.SafeDelete([]string{"timeouts"})
 }

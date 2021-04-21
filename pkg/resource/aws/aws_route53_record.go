@@ -65,7 +65,7 @@ var AwsRoute53RecordTags = map[string]string{
 	"id":              `computed:"true"`,
 }
 
-func AwsRoute53RecordNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRoute53RecordNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"allow_overwrite"})
 	val.SafeDelete([]string{"name"})
 }

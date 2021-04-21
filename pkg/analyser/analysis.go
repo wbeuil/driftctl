@@ -10,7 +10,8 @@ import (
 
 type Change struct {
 	diff.Change
-	Computed bool `json:"computed"`
+	Computed   bool `json:"computed"`
+	JsonString bool
 }
 
 type Changelog []Change

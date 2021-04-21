@@ -59,7 +59,7 @@ var AwsS3BucketNotificationTags = map[string]string{
 	"topic.id":           `computed:"true"`,
 }
 
-func AwsS3BucketNotificationNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketNotificationNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"id"})
 	val.SafeDelete([]string{"bucket"})
 }

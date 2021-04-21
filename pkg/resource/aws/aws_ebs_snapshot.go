@@ -55,6 +55,6 @@ var AwsEbsSnapshotTags = map[string]string{
 	"volume_size":            `computed:"true"`,
 }
 
-func AwsEbsSnapshotNormalizer(val *dctlcty.CtyAttributes) {
+func AwsEbsSnapshotNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"timeouts"})
 }

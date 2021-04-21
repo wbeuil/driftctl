@@ -40,5 +40,5 @@ var AwsIamRolePolicyTags = map[string]string{
 	"policy": `jsonstring:"true"`,
 }
 
-func AwsIamRolePolicyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamRolePolicyNormalizer(val *rescty.CtyAttributes) {
 }

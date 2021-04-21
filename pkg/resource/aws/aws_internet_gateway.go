@@ -40,5 +40,5 @@ var AwsInternetGatewayTags = map[string]string{
 	"owner_id": `computed:"true"`,
 }
 
-func AwsInternetGatewayNormalizer(val *dctlcty.CtyAttributes) {
+func AwsInternetGatewayNormalizer(val *rescty.CtyAttributes) {
 }

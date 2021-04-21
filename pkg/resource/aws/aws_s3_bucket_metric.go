@@ -40,5 +40,5 @@ var AwsS3BucketMetricTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsS3BucketMetricNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketMetricNormalizer(val *rescty.CtyAttributes) {
 }

@@ -4,8 +4,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 	resourceaws "github.com/cloudskiff/driftctl/pkg/resource/aws"
+	"github.com/cloudskiff/driftctl/pkg/resource/cty"
 
 	"github.com/r3labs/diff/v2"
 
@@ -42,7 +42,8 @@ func (c *ComputedDiffAlert) ShouldIgnoreResource() bool {
 }
 
 type Analyzer struct {
-	alerter *alerter.Alerter
+	alerter                  *alerter.Alerter
+	resourceSchemaRepository *resource.SchemaRepository
 }
 
 type Filter interface {
@@ -50,8 +51,8 @@ type Filter interface {
 	IsFieldIgnored(res resource.Resource, path []string) bool
 }
 
-func NewAnalyzer(alerter *alerter.Alerter) Analyzer {
-	return Analyzer{alerter}
+func NewAnalyzer(alerter *alerter.Alerter, resourceSchemaRepository *resource.SchemaRepository) Analyzer {
+	return Analyzer{alerter, resourceSchemaRepository}
 }
 
 func (a Analyzer) Analyze(remoteResources, resourcesFromState []resource.Resource, filter Filter) (Analysis, error) {
@@ -83,8 +84,8 @@ func (a Analyzer) Analyze(remoteResources, resourcesFromState []resource.Resourc
 		filteredRemoteResource = removeResourceByIndex(i, filteredRemoteResource)
 		analysis.AddManaged(stateRes)
 
-		state := dctlcty.AsAttrs(stateRes.CtyValue(), stateRes.TerraformType())
-		rem := dctlcty.AsAttrs(remoteRes.CtyValue(), remoteRes.TerraformType())
+		state := cty.ToCtyAttributes(stateRes.CtyValue())
+		rem := cty.ToCtyAttributes(remoteRes.CtyValue())
 
 		delta, _ := diff.Diff(state.Attrs, rem.Attrs)
 		if len(delta) > 0 {
@@ -97,7 +98,11 @@ func (a Analyzer) Analyze(remoteResources, resourcesFromState []resource.Resourc
 					continue
 				}
 				c := Change{Change: change}
-				c.Computed = state.IsComputedField(c.Path)
+				resSchema, exist := a.resourceSchemaRepository.GetSchema(stateRes.TerraformType())
+				if exist {
+					c.Computed = resSchema.IsComputedField(c.Path)
+					c.JsonString = resSchema.IsJsonStringField(c.Path)
+				}
 				if c.Computed {
 					haveComputedDiff = true
 				}

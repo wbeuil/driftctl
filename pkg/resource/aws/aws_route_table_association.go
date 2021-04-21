@@ -37,5 +37,5 @@ var AwsRouteTableAssociationTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsRouteTableAssociationNormalizer(val *dctlcty.CtyAttributes) {
+func AwsRouteTableAssociationNormalizer(val *rescty.CtyAttributes) {
 }

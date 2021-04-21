@@ -4,7 +4,9 @@ import (
 	"context"
 
 	"github.com/cloudskiff/driftctl/pkg/remote"
+	"github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/pkg/errors"
+	"github.com/zclconf/go-cty/cty/gocty"
 
 	"github.com/cloudskiff/driftctl/pkg/parallel"
 	"github.com/sirupsen/logrus"
@@ -14,16 +16,18 @@ import (
 )
 
 type Scanner struct {
-	resourceSuppliers []resource.Supplier
-	runner            *parallel.ParallelRunner
-	alerter           *alerter.Alerter
+	resourceSuppliers        []resource.Supplier
+	runner                   *parallel.ParallelRunner
+	alerter                  *alerter.Alerter
+	resourceSchemaRepository *resource.SchemaRepository
 }
 
-func NewScanner(resourceSuppliers []resource.Supplier, alerter *alerter.Alerter) *Scanner {
+func NewScanner(resourceSuppliers []resource.Supplier, alerter *alerter.Alerter, resourceSchemaRepository *resource.SchemaRepository) *Scanner {
 	return &Scanner{
-		resourceSuppliers: resourceSuppliers,
-		runner:            parallel.NewParallelRunner(context.TODO(), 10),
-		alerter:           alerter,
+		resourceSuppliers:        resourceSuppliers,
+		runner:                   parallel.NewParallelRunner(context.TODO(), 10),
+		alerter:                  alerter,
+		resourceSchemaRepository: resourceSchemaRepository,
 	}
 }
 
@@ -60,6 +64,16 @@ loop:
 			for _, res := range resources.([]resource.Resource) {
 				normalisable, ok := res.(resource.NormalizedResource)
 				if ok {
+					schema, exist := s.resourceSchemaRepository.GetSchema(res.TerraformType())
+					if exist {
+						ctyAttr := cty.ToCtyAttributes(res.CtyValue())
+						schema.NormalizeFunc(ctyAttr)
+						ctyVal, err := gocty.ToCtyValue(ctyAttr, res.CtyValue().Type())
+						if err != nil {
+							return nil, err
+						}
+						*res.CtyValue() = ctyVal
+					}
 					normalizedRes, err := normalisable.NormalizeForProvider()
 
 					if err != nil {

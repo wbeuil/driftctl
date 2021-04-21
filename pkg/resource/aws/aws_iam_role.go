@@ -51,6 +51,6 @@ var AwsIamRoleTags = map[string]string{
 	"unique_id":          `computed:"true"`,
 }
 
-func AwsIamRoleNormalizer(val *dctlcty.CtyAttributes) {
+func AwsIamRoleNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"force_detach_policies"})
 }

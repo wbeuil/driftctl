@@ -60,5 +60,5 @@ var AwsS3BucketInventoryTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsS3BucketInventoryNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketInventoryNormalizer(val *rescty.CtyAttributes) {
 }

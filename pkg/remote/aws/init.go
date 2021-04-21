@@ -16,7 +16,7 @@ const RemoteAWSTerraform = "aws+tf"
  * Initialize remote (configure credentials, launch tf providers and start gRPC clients)
  * Required to use Scanner
  */
-func Init(alerter *alerter.Alerter, providerLibrary *terraform.ProviderLibrary, supplierLibrary *resource.SupplierLibrary, progress output.Progress) error {
+func Init(alerter *alerter.Alerter, providerLibrary *terraform.ProviderLibrary, supplierLibrary *resource.SupplierLibrary, progress output.Progress, resourceSchemaRepository *resource.SchemaRepository) error {
 	provider, err := NewAWSTerraformProvider(progress)
 	if err != nil {
 		return err
@@ -78,8 +78,8 @@ func Init(alerter *alerter.Alerter, providerLibrary *terraform.ProviderLibrary, 
 	supplierLibrary.AddSupplier(NewKMSAliasSupplier(provider))
 	supplierLibrary.AddSupplier(NewLambdaEventSourceMappingSupplier(provider))
 
-	resource.RetrieveAttributesFromSchemas(provider.Schema())
-	aws.InitResourcesMetadata()
+	resourceSchemaRepository.Init(provider.Schema())
+	aws.InitResourcesMetadata(resourceSchemaRepository)
 
 	return nil
 }

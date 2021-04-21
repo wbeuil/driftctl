@@ -37,5 +37,5 @@ var AwsSqsQueuePolicyTags = map[string]string{
 	"policy": `jsonstring:"true"`,
 }
 
-func AwsSqsQueuePolicyNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSqsQueuePolicyNormalizer(val *rescty.CtyAttributes) {
 }

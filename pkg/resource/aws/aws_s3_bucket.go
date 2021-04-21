@@ -157,7 +157,7 @@ var AwsS3BucketTags = map[string]string{
 	"lifecycle_rule.id":           `computed:"true"`,
 }
 
-func AwsS3BucketNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketNormalizer(val *rescty.CtyAttributes) {
 	val.SafeDelete([]string{"acl"})
 	val.SafeDelete([]string{"force_destroy"})
 }

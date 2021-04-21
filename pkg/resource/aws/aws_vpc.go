@@ -63,5 +63,5 @@ var AwsVpcTags = map[string]string{
 	"owner_id":                       `computed:"true"`,
 }
 
-func AwsVpcNormalizer(val *dctlcty.CtyAttributes) {
+func AwsVpcNormalizer(val *rescty.CtyAttributes) {
 }

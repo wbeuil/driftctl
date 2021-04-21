@@ -53,5 +53,5 @@ var AwsS3BucketAnalyticsConfigurationTags = map[string]string{
 	"id": `computed:"true"`,
 }
 
-func AwsS3BucketAnalyticsConfigurationNormalizer(val *dctlcty.CtyAttributes) {
+func AwsS3BucketAnalyticsConfigurationNormalizer(val *rescty.CtyAttributes) {
 }

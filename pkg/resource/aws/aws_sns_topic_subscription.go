@@ -46,5 +46,5 @@ var AwsSnsTopicSubscriptionTags = map[string]string{
 	"id":              `computed:"true"`,
 }
 
-func AwsSnsTopicSubscriptionNormalizer(val *dctlcty.CtyAttributes) {
+func AwsSnsTopicSubscriptionNormalizer(val *rescty.CtyAttributes) {
 }
