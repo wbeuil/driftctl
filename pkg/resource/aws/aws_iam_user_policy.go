@@ -2,9 +2,8 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamUserPolicyResourceType = "aws_iam_user_policy"
@@ -30,15 +29,10 @@ func (r *AwsIamUserPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamUserPolicyMetaData() {
-	dctlcty.SetMetadata(AwsIamUserPolicyResourceType, AwsIamUserPolicyTags, AwsIamUserPolicyNormalizer)
-}
-
-var AwsIamUserPolicyTags = map[string]string{
-	"id":     `computed:"true"`,
-	"name":   `computed:"true"`,
-	"policy": `jsonstring:"true"`,
-}
-
-func AwsIamUserPolicyNormalizer(val *rescty.CtyAttributes) {
+func initAwsIamUserPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.UpdateSchema(AwsIamUserPolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
 }

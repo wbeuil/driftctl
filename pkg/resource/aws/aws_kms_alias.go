@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsKmsAliasResourceType = "aws_kms_alias"
@@ -31,17 +31,9 @@ func (r *AwsKmsAlias) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsKmsAliasMetaData() {
-	dctlcty.SetMetadata(AwsKmsAliasResourceType, AwsKmsAliasTags, AwsKmsAliasNormalizer)
-}
-
-var AwsKmsAliasTags = map[string]string{
-	"arn":            `computed:"true"`,
-	"id":             `computed:"true"`,
-	"target_key_arn": `computed:"true"`,
-}
-
-func AwsKmsAliasNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"name"})
-	val.SafeDelete([]string{"name_prefix"})
+func initAwsKmsAliasMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsKmsAliasResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"name"})
+		val.SafeDelete([]string{"name_prefix"})
+	})
 }

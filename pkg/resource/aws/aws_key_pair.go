@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsKeyPairResourceType = "aws_key_pair"
@@ -33,19 +33,9 @@ func (r *AwsKeyPair) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsKeyPairMetaData() {
-	dctlcty.SetMetadata(AwsKeyPairResourceType, AwsKeyPairTags, AwsKeyPairNormalizer)
-}
-
-var AwsKeyPairTags = map[string]string{
-	"arn":         `computed:"true"`,
-	"fingerprint": `computed:"true"`,
-	"id":          `computed:"true"`,
-	"key_name":    `computed:"true"`,
-	"key_pair_id": `computed:"true"`,
-}
-
-func AwsKeyPairNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"key_name_prefix"})
-	val.SafeDelete([]string{"public_key"})
+func initAwsKeyPairMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsKeyPairResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"key_name_prefix"})
+		val.SafeDelete([]string{"public_key"})
+	})
 }

@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamRolePolicyAttachmentResourceType = "aws_iam_role_policy_attachment"
@@ -26,15 +24,4 @@ func (r *AwsIamRolePolicyAttachment) TerraformType() string {
 
 func (r *AwsIamRolePolicyAttachment) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsIamRolePolicyAttachmentMetaData() {
-	dctlcty.SetMetadata(AwsIamRolePolicyAttachmentResourceType, AwsIamRolePolicyAttachmentTags, AwsIamRolePolicyAttachmentNormalizer)
-}
-
-var AwsIamRolePolicyAttachmentTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsIamRolePolicyAttachmentNormalizer(val *rescty.CtyAttributes) {
 }

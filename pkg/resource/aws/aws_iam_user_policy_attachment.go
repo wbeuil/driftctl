@@ -3,8 +3,6 @@ package aws
 
 import (
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamUserPolicyAttachmentResourceType = "aws_iam_user_policy_attachment"
@@ -26,15 +24,4 @@ func (r *AwsIamUserPolicyAttachment) TerraformType() string {
 
 func (r *AwsIamUserPolicyAttachment) CtyValue() *cty.Value {
 	return r.CtyVal
-}
-
-func initAwsIamUserPolicyAttachmentMetaData() {
-	dctlcty.SetMetadata(AwsIamUserPolicyAttachmentResourceType, AwsIamUserPolicyAttachmentTags, AwsIamUserPolicyAttachmentNormalizer)
-}
-
-var AwsIamUserPolicyAttachmentTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsIamUserPolicyAttachmentNormalizer(val *rescty.CtyAttributes) {
 }

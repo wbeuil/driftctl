@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsLambdaEventSourceMappingResourceType = "aws_lambda_event_source_mapping"
@@ -48,27 +48,13 @@ func (r *AwsLambdaEventSourceMapping) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsLambdaEventSourceMappingMetaData() {
-	dctlcty.SetMetadata(AwsLambdaEventSourceMappingResourceType, AwsLambdaEventSourceMappingTags, AwsLambdaEventSourceMappingNormalizer)
-}
-
-var AwsLambdaEventSourceMappingTags = map[string]string{
-	"function_arn":                  `computed:"true"`,
-	"id":                            `computed:"true"`,
-	"last_modified":                 `computed:"true"`,
-	"last_processing_result":        `computed:"true"`,
-	"maximum_record_age_in_seconds": `computed:"true"`,
-	"maximum_retry_attempts":        `computed:"true"`,
-	"parallelization_factor":        `computed:"true"`,
-	"state_transition_reason":       `computed:"true"`,
-	"uuid":                          `computed:"true"`,
-}
-
-func AwsLambdaEventSourceMappingNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"last_modified"})
-	val.SafeDelete([]string{"last_processing_result"})
-	val.SafeDelete([]string{"starting_position"})
-	val.SafeDelete([]string{"starting_position_timestamp"})
-	val.SafeDelete([]string{"state"})
-	val.SafeDelete([]string{"state_transition_reason"})
+func initAwsLambdaEventSourceMappingMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsLambdaEventSourceMappingResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"last_modified"})
+		val.SafeDelete([]string{"last_processing_result"})
+		val.SafeDelete([]string{"starting_position"})
+		val.SafeDelete([]string{"starting_position_timestamp"})
+		val.SafeDelete([]string{"state"})
+		val.SafeDelete([]string{"state_transition_reason"})
+	})
 }

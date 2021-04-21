@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamPolicyResourceType = "aws_iam_policy"
@@ -32,17 +32,13 @@ func (r *AwsIamPolicy) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamPolicyMetaData() {
-	dctlcty.SetMetadata(AwsIamPolicyResourceType, AwsIamPolicyTags, AwsIamPolicyNormalizer)
-}
-
-var AwsIamPolicyTags = map[string]string{
-	"arn":    `computed:"true"`,
-	"id":     `computed:"true"`,
-	"name":   `computed:"true"`,
-	"policy": `jsonstring:"true"`,
-}
-
-func AwsIamPolicyNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"name_prefix"})
+func initAwsIamPolicyMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.UpdateSchema(AwsIamPolicyResourceType, map[string]func(attributeSchema *resource.AttributeSchema){
+		"policy": func(attributeSchema *resource.AttributeSchema) {
+			attributeSchema.JsonString = true
+		},
+	})
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamPolicyResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"name_prefix"})
+	})
 }

@@ -2,9 +2,9 @@
 package aws
 
 import (
+	"github.com/cloudskiff/driftctl/pkg/resource"
+	rescty "github.com/cloudskiff/driftctl/pkg/resource/cty"
 	"github.com/zclconf/go-cty/cty"
-
-	"github.com/cloudskiff/driftctl/pkg/dctlcty"
 )
 
 const AwsIamPolicyAttachmentResourceType = "aws_iam_policy_attachment"
@@ -31,14 +31,8 @@ func (r *AwsIamPolicyAttachment) CtyValue() *cty.Value {
 	return r.CtyVal
 }
 
-func initAwsIamPolicyAttachmentMetaData() {
-	dctlcty.SetMetadata(AwsIamPolicyAttachmentResourceType, AwsIamPolicyAttachmentTags, AwsIamPolicyAttachmentNormalizer)
-}
-
-var AwsIamPolicyAttachmentTags = map[string]string{
-	"id": `computed:"true"`,
-}
-
-func AwsIamPolicyAttachmentNormalizer(val *rescty.CtyAttributes) {
-	val.SafeDelete([]string{"name"})
+func initAwsIamPolicyAttachmentMetaData(resourceSchemaRepository *resource.SchemaRepository) {
+	resourceSchemaRepository.SetNormalizeFunc(AwsIamPolicyAttachmentResourceType, func(val *rescty.CtyAttributes) {
+		val.SafeDelete([]string{"name"})
+	})
 }
