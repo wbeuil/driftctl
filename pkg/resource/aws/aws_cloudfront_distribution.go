@@ -162,6 +162,12 @@ func (r *AwsCloudfrontDistribution) CtyValue() *cty.Value {
 
 func initAwsCloudfrontDistributionMetaData(resourceSchemaRepository resource.SchemaRepositoryInterface) {
 	resourceSchemaRepository.SetNormalizeFunc(AwsCloudfrontDistributionResourceType, func(val *resource.ResourceAttributes) {
+		val.SetDefault([]string{"aliases"})
+		val.SetDefault([]string{"tags"})
+		val.SetDefault([]string{"origin_group"})
+
+		val.SafeDelete([]string{"restrictions", "0", "geo_restriction", "0", "locations"})
+
 		val.SafeDelete([]string{"etag"})
 		val.SafeDelete([]string{"last_modified_time"})
 		val.SafeDelete([]string{"retain_on_delete"})

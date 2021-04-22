@@ -7,6 +7,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/gocty"
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
@@ -16,7 +17,9 @@ type Resource interface {
 	CtyValue() *cty.Value
 }
 
-var refactoredResources = []string{}
+var refactoredResources = []string{
+	"aws_cloudfront_distribution",
+}
 
 func IsRefactoredResource(typ string) bool {
 	for _, refactoredResource := range refactoredResources {
@@ -117,16 +120,36 @@ func ToResourceAttributes(val *cty.Value) *ResourceAttributes {
 
 	return &ResourceAttributes{
 		attrs,
+		val.Type(),
 	}
 }
 
 type ResourceAttributes struct {
 	Attrs map[string]interface{}
+	Type  cty.Type
 }
 
 func (a *ResourceAttributes) Get(path string) (interface{}, bool) {
 	val, exist := a.Attrs[path]
 	return val, exist
+	//
+	// val := a.Attrs
+	// for i, key := range path {
+	// 	if i == len(path)-1 {
+	// 		delete(val, key)
+	// 		return
+	// 	}
+	//
+	// 	v, exists := val[key]
+	// 	if !exists {
+	// 		return
+	// 	}
+	// 	m, ok := v.(map[string]interface{})
+	// 	if !ok {
+	// 		return
+	// 	}
+	// 	val = m
+	// }
 }
 
 func (a *ResourceAttributes) SafeDelete(path []string) {
@@ -170,4 +193,16 @@ func (a *ResourceAttributes) SafeSet(path []string, value interface{}) error {
 		val = m
 	}
 	return errors.New("Error setting value") // should not happen ?
+}
+
+func (a *ResourceAttributes) SetDefault(path []string) error {
+	ctyVal, err := gocty.ToCtyValue(a.Attrs, a.Type)
+	if err != nil {
+		return err
+	}
+	attrVal := ctyVal.GetAttr(path[0])
+	if attrVal.IsNull() || (!attrVal.IsNull() && attrVal.LengthInt() == 0) {
+		a.SafeDelete(path)
+	}
+	return nil
 }

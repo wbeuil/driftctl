@@ -50,10 +50,6 @@ func NewSchemaRepository() *SchemaRepository {
 	}
 }
 
-func (r *SchemaRepository) addSchema(resourceType string, metadata *Schema) {
-	r.schemas[resourceType] = metadata
-}
-
 func (r *SchemaRepository) GetSchema(resourceType string) (*Schema, bool) {
 	schema, exist := r.schemas[resourceType]
 	return schema, exist
