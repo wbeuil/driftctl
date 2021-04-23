@@ -2,7 +2,10 @@ package resource
 
 import (
 	"encoding/json"
+	"fmt"
+	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -132,24 +135,6 @@ type ResourceAttributes struct {
 func (a *ResourceAttributes) Get(path string) (interface{}, bool) {
 	val, exist := a.Attrs[path]
 	return val, exist
-	//
-	// val := a.Attrs
-	// for i, key := range path {
-	// 	if i == len(path)-1 {
-	// 		delete(val, key)
-	// 		return
-	// 	}
-	//
-	// 	v, exists := val[key]
-	// 	if !exists {
-	// 		return
-	// 	}
-	// 	m, ok := v.(map[string]interface{})
-	// 	if !ok {
-	// 		return
-	// 	}
-	// 	val = m
-	// }
 }
 
 func (a *ResourceAttributes) SafeDelete(path []string) {
@@ -205,4 +190,178 @@ func (a *ResourceAttributes) SetDefault(path []string) error {
 		a.SafeDelete(path)
 	}
 	return nil
+}
+
+func (a *ResourceAttributes) SanitizeDefaults() {
+	original := reflect.ValueOf(a.Attrs)
+	copy := reflect.New(original.Type()).Elem()
+	a.run("", original, copy)
+	a.Attrs = copy.Interface().(map[string]interface{})
+}
+
+func (a *ResourceAttributes) run(path string, original, copy reflect.Value) {
+	switch original.Kind() {
+	case reflect.Ptr:
+		originalValue := original.Elem()
+		if !originalValue.IsValid() {
+			return
+		}
+		copy.Set(reflect.New(originalValue.Type()))
+		a.run(path, originalValue, copy.Elem())
+	case reflect.Interface:
+		// Get rid of the wrapping interface
+		originalValue := original.Elem()
+		if originalValue.Len() == 0 {
+			fmt.Printf("Skipped empty value %s\n", path)
+			return
+		}
+		// Create a new object. Now new gives us a pointer, but we want the value it
+		// points to, so we have to call Elem() to unwrap it
+		copyValue := reflect.New(originalValue.Type()).Elem()
+		a.run(path, originalValue, copyValue)
+		copy.Set(copyValue)
+
+	case reflect.Struct:
+		fmt.Printf("Reading struct field %s\n", path)
+		for i := 0; i < original.NumField(); i += 1 {
+			field := original.Field(i)
+			a.run(concatenatePath(path, field.String()), field, copy.Field(i))
+		}
+	case reflect.Slice:
+		fmt.Printf("Reading slice field %s\n", path)
+		copy.Set(reflect.MakeSlice(original.Type(), original.Len(), original.Cap()))
+		for i := 0; i < original.Len(); i += 1 {
+			a.run(concatenatePath(path, strconv.Itoa(i)), original.Index(i), copy.Index(i))
+		}
+	case reflect.Map:
+		fmt.Printf("Reading map field %s\n", path)
+		copy.Set(reflect.MakeMap(original.Type()))
+		for _, key := range original.MapKeys() {
+			originalValue := original.MapIndex(key)
+			copyValue := reflect.New(originalValue.Type()).Elem()
+			a.run(concatenatePath(path, key.String()), originalValue, copyValue)
+			copy.SetMapIndex(key, copyValue)
+		}
+	default:
+		fmt.Printf("Reading leaf field %s\n", path)
+		copy.Set(original)
+	}
+}
+
+func concatenatePath(path, next string) string {
+	if path == "" {
+		return next
+	}
+	return strings.Join([]string{path, next}, ".")
+}
+
+func (a *ResourceAttributes) SanitizeDefaultsV2() {
+	original := reflect.ValueOf(a.Attrs)
+	copy := reflect.New(original.Type()).Elem()
+	a.runV2("", original, copy)
+	a.Attrs = copy.Interface().(map[string]interface{})
+}
+
+func (a *ResourceAttributes) runV2(path string, original, copy reflect.Value) {
+	switch original.Kind() {
+	case reflect.Ptr:
+		originalValue := original.Elem()
+		if !originalValue.IsValid() {
+			return
+		}
+		copy.Set(reflect.New(originalValue.Type()))
+		a.runV2(path, originalValue, copy.Elem())
+	case reflect.Interface:
+		// Get rid of the wrapping interface
+		originalValue := original.Elem()
+		// Create a new object. Now new gives us a pointer, but we want the value it
+		// points to, so we have to call Elem() to unwrap it
+		copyValue := reflect.New(originalValue.Type()).Elem()
+		a.runV2(path, originalValue, copyValue)
+		copy.Set(copyValue)
+
+	case reflect.Struct:
+		fmt.Printf("Reading struct field %s\n", path)
+		for i := 0; i < original.NumField(); i += 1 {
+			field := original.Field(i)
+			a.runV2(concatenatePath(path, field.String()), field, copy.Field(i))
+		}
+	case reflect.Slice:
+		fmt.Printf("Reading slice field %s\n", path)
+		copy.Set(reflect.MakeSlice(original.Type(), original.Len(), original.Cap()))
+		for i := 0; i < original.Len(); i += 1 {
+			a.runV2(concatenatePath(path, strconv.Itoa(i)), original.Index(i), copy.Index(i))
+		}
+	case reflect.Map:
+		fmt.Printf("Reading map field %s\n", path)
+		copy.Set(reflect.MakeMap(original.Type()))
+		for _, key := range original.MapKeys() {
+			originalValue := original.MapIndex(key)
+			copyValue := reflect.New(originalValue.Type()).Elem()
+			a.runV2(concatenatePath(path, key.String()), originalValue, copyValue)
+			copy.SetMapIndex(key, copyValue)
+		}
+	default:
+		fmt.Printf("Reading leaf field %s\n", path)
+		copy.Set(original)
+	}
+}
+
+func (a *ResourceAttributes) SanitizeDefaultsV3() {
+	original := reflect.ValueOf(a.Attrs)
+	copy := reflect.New(original.Type()).Elem()
+	a.runV3("", original, copy)
+	a.Attrs = copy.Interface().(map[string]interface{})
+}
+
+func (a *ResourceAttributes) runV3(path string, original, copy reflect.Value) bool {
+	switch original.Kind() {
+	case reflect.Ptr:
+		originalValue := original.Elem()
+		if !originalValue.IsValid() {
+			return false
+		}
+		copy.Set(reflect.New(originalValue.Type()))
+		a.runV3(path, originalValue, copy.Elem())
+	case reflect.Interface:
+		// Get rid of the wrapping interface
+		originalValue := original.Elem()
+		if originalValue.Len() == 0 {
+			fmt.Printf("Skipped empty value %s\n", path)
+			return false
+		}
+		// Create a new object. Now new gives us a pointer, but we want the value it
+		// points to, so we have to call Elem() to unwrap it
+		copyValue := reflect.New(originalValue.Type()).Elem()
+		a.runV3(path, originalValue, copyValue)
+		copy.Set(copyValue)
+
+	case reflect.Struct:
+		fmt.Printf("Reading struct field %s\n", path)
+		for i := 0; i < original.NumField(); i += 1 {
+			field := original.Field(i)
+			a.runV3(concatenatePath(path, field.String()), field, copy.Field(i))
+		}
+	case reflect.Slice:
+		fmt.Printf("Reading slice field %s\n", path)
+		copy.Set(reflect.MakeSlice(original.Type(), original.Len(), original.Cap()))
+		for i := 0; i < original.Len(); i += 1 {
+			a.runV3(concatenatePath(path, strconv.Itoa(i)), original.Index(i), copy.Index(i))
+		}
+	case reflect.Map:
+		fmt.Printf("Reading map field %s\n", path)
+		copy.Set(reflect.MakeMap(original.Type()))
+		for _, key := range original.MapKeys() {
+			originalValue := original.MapIndex(key)
+			copyValue := reflect.New(originalValue.Type()).Elem()
+			created := a.runV3(concatenatePath(path, key.String()), originalValue, copyValue)
+			if created {
+				copy.SetMapIndex(key, copyValue)
+			}
+		}
+	default:
+		fmt.Printf("Reading leaf field %s\n", path)
+		copy.Set(original)
+	}
+	return true
 }
