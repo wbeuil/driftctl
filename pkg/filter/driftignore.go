@@ -143,6 +143,10 @@ RuleCheck:
 	return false
 }
 
+func (r *DriftIgnore) RulesCount() int {
+	return len(r.resExclusionList) + len(r.resExclusionWildcardList) + len(r.driftExclusionList)
+}
+
 //Check two strings recursively, pattern can contain wildcard
 func wildcardMatchChecker(str, pattern string) bool {
 	if str == "" && pattern == "" {
