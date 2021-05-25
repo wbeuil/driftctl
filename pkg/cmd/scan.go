@@ -6,8 +6,10 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/cloudskiff/driftctl/pkg/telemetry"
+	"github.com/fatih/color"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -198,6 +200,8 @@ func scanRun(opts *pkg.ScanOptions) error {
 	if err != nil {
 		return err
 	}
+
+	globaloutput.Printf(color.WhiteString("Done in %s\n", analysis.Duration.Round(time.Second)))
 
 	if !opts.DisableTelemetry {
 		telemetry.SendTelemetry(analysis)
