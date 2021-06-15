@@ -3,7 +3,6 @@ package filter
 import (
 	"os"
 	"path"
-	"reflect"
 	"strings"
 	"testing"
 
@@ -151,6 +150,48 @@ func TestDriftIgnore_IsResourceIgnored(t *testing.T) {
 				true,
 			},
 		},
+		{
+			name: "drift_ignore_all_exclude",
+			resources: []resource.Resource{
+				&resource2.FakeResource{
+					Type: "type1",
+					Id:   "id1",
+				},
+				&resource2.FakeResource{
+					Type: "type2",
+					Id:   "id1",
+				},
+				&resource2.FakeResource{
+					Type: "type2",
+					Id:   "id11",
+				},
+				&resource2.FakeResource{
+					Type: "type2",
+					Id:   "id2",
+				},
+				&resource2.FakeResource{
+					Type: "type3",
+					Id:   "id100",
+				},
+				&resource2.FakeResource{
+					Type: "type3",
+					Id:   "id101",
+				},
+				&resource2.FakeResource{
+					Type: "iam_user",
+					Id:   "id\\WithBac*slash***\\*\\",
+				},
+			},
+			want: []bool{
+				true,
+				true,
+				true,
+				true,
+				true,
+				true,
+				false,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -296,62 +337,6 @@ func TestDriftIgnore_IsFieldIgnored(t *testing.T) {
 				if arg.Want != got {
 					t.Errorf("%s.%s.%s expected %v got %v", arg.Res.TerraformType(), arg.Res.TerraformId(), strings.Join(arg.Path, "."), arg.Want, got)
 				}
-			}
-		})
-	}
-}
-
-func Test_escapableSplit(t *testing.T) {
-	tests := []struct {
-		name string
-		line string
-		want []string
-	}{
-		{
-			name: "Dot at start",
-			line: ".",
-			want: []string{"."},
-		},
-		{
-			name: "Dot at end",
-			line: "test.toto.",
-			want: []string{"test", "toto"},
-		},
-		{
-			name: "wildcard dot",
-			line: "*.subfoobar",
-			want: []string{"*", "subfoobar"},
-		},
-		{
-			name: "text wildcard dot",
-			line: "res*.subfoobar",
-			want: []string{"res*", "subfoobar"},
-		},
-		{
-			name: "missing text multiple wildcard dot",
-			line: "r*s*.s**ub***ob********a*r",
-			want: []string{"r*s*", "s*ub*ob*a*r"},
-		},
-		{
-			name: "prefix wildcard dot",
-			line: "*res.subfoobar",
-			want: []string{"*res", "subfoobar"},
-		},
-		{
-			name: "suffix multiple wildcard dot",
-			line: "res.subfoobar*****",
-			want: []string{"res", "subfoobar*"},
-		},
-		{
-			name: "dot wildcard",
-			line: "res.*",
-			want: []string{"res", "*"},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := readDriftIgnoreLine(tt.line); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("EscapableSplit() = %v, want %v", got, tt.want)
 			}
 		})
 	}
