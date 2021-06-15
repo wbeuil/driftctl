@@ -38,6 +38,10 @@ func (r *DriftIgnore) readIgnoreFile() error {
 	for lineNumber := 1; scanner.Scan(); lineNumber++ {
 		line := scanner.Text()
 		lines = append(lines, gitignore.ParsePattern(line, nil))
+		if !strings.HasSuffix(line, "*") {
+			line := fmt.Sprintf("%s.*", line)
+			lines = append(lines, gitignore.ParsePattern(line, nil))
+		}
 	}
 
 	if err := scanner.Err(); err != nil {

@@ -323,6 +323,76 @@ func TestDriftIgnore_IsFieldIgnored(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "drift_ignore_all_exclude_field",
+			args: []Args{
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "full_drift_ignored"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "full_drift_ignored"},
+					Path: []string{"foobar"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "partial_drift_ignored"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "partial_drift_ignored"},
+					Path: []string{"foobar"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "resource_type", Id: "id.with.dots"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "resource_type", Id: "id.with.dots"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "resource_type", Id: "idwith\\"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "resource_type", Id: "idwith\\backslashes"},
+					Path: []string{"json"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "resource_type", Id: "idwith\\backslashes"},
+					Path: []string{"foobar"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "wildcard_drift_ignored"},
+					Path: []string{"struct", "baz"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "wildcard_drift_ignored"},
+					Path: []string{"struct", "bar"},
+					Want: false,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "endofpath_drift_ignored"},
+					Path: []string{"struct", "baz"},
+					Want: true,
+				},
+				{
+					Res:  &resource2.FakeResource{Type: "res_type", Id: "endofpath_drift_ignored"},
+					Path: []string{"struct", "bar"},
+					Want: false,
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
