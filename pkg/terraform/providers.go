@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	AWS    string = "aws"
-	GITHUB string = "github"
+	AWS     string = "aws"
+	GITHUB  string = "github"
+	VSPHERE string = "vsphere"
 )
 
 type ProviderLibrary struct {
@@ -51,6 +52,10 @@ func (p *ProviderLibrary) GetProviderForResourceType(resType string) (TerraformP
 
 	if strings.HasPrefix(resType, GITHUB) {
 		name = GITHUB
+	}
+
+	if strings.HasPrefix(resType, VSPHERE) {
+		name = VSPHERE
 	}
 
 	if name != "" {
