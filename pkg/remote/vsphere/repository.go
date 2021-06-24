@@ -65,6 +65,11 @@ func (r *vsphereRepository) ListVirtualMachines() ([]string, error) {
 	// Second version
 	ctx2 := context.TODO()
 	finder := find.NewFinder(r.client.Client, true)
+	dc, err := finder.DefaultDatacenter(ctx2)
+	if err != nil {
+		return nil, err
+	}
+	finder.SetDatacenter(dc)
 	vms2, err := finder.VirtualMachineList(ctx2, "*")
 	if err != nil {
 		return nil, err
