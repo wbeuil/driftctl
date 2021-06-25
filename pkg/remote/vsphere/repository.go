@@ -2,13 +2,10 @@ package vsphere
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cloudskiff/driftctl/pkg/remote/cache"
 	"github.com/vmware/govmomi"
 	"github.com/vmware/govmomi/find"
-	"github.com/vmware/govmomi/view"
-	"github.com/vmware/govmomi/vim25/mo"
 )
 
 type VSphereRepository interface {
@@ -45,24 +42,6 @@ func NewVSphereRepository(config vsphereConfig, c cache.Cache) (*vsphereReposito
 }
 
 func (r *vsphereRepository) ListVirtualMachines() ([]string, error) {
-	// First version
-	ctx := context.TODO()
-	manager := view.NewManager(r.client.Client)
-	view, err := manager.CreateContainerView(ctx, r.client.ServiceContent.RootFolder, []string{"VirtualMachine"}, true)
-	if err != nil {
-		return nil, err
-	}
-	var vms []mo.VirtualMachine
-	err = view.Retrieve(ctx, []string{"VirtualMachine"}, []string{"config.uuid"}, &vms)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println("First attempt with ContainerView")
-	for _, vm := range vms {
-		fmt.Println(vm)
-	}
-
-	// Second version
 	ctx2 := context.TODO()
 	finder := find.NewFinder(r.client.Client, true)
 	dc, err := finder.DefaultDatacenter(ctx2)
@@ -70,14 +49,13 @@ func (r *vsphereRepository) ListVirtualMachines() ([]string, error) {
 		return nil, err
 	}
 	finder.SetDatacenter(dc)
-	vms2, err := finder.VirtualMachineList(ctx2, "*")
+	vms, err := finder.VirtualMachineList(ctx2, "*")
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Second attempt with Finder")
-	for _, vm2 := range vms2 {
-		fmt.Println(vm2)
+	var ids []string
+	for _, vm := range vms {
+		ids = append(ids, vm.InventoryPath)
 	}
-
-	return []string{}, nil
+	return ids, nil
 }
